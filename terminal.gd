@@ -35,11 +35,16 @@ func _get_max_lines() -> int:
 
 func _redraw() -> void:
 	var max_lines = _get_max_lines()
-	while output.size() > max_lines:
+	
+	# trim from front until rendered line count fits
+	while true:
+		output_box.clear()
+		for line in output:
+			output_box.append_text(line + "\n")
+		if output_box.get_line_count() <= max_lines or output.is_empty():
+			break
 		output.pop_front()
-	output_box.clear()
-	for line in output:
-		output_box.append_text(line + "\n")
+	
 	var before = current_input.left(cursor_pos)
 	var after = current_input.substr(cursor_pos)
 	output_box.append_text(PROMPT + before + "█" + after)
@@ -157,7 +162,14 @@ func _handle_command(raw: String) -> void:
 			if not args.is_empty():
 				output.append("usage: help")
 				return
-			output.append("Available commands:\n- help\n- echo\n- clear\n- scan\n- install")
+			output.append("Available commands:")
+			output.append("- help")
+			output.append("- echo")
+			output.append("- clear")
+			output.append("- scan")
+			output.append("- install [driver]")
+			output.append("- dismiss [--force]")
+			output.append("- virus [scan | quarantine | purge]")
 			return
 		"echo":
 			output.append(" ".join(args))
