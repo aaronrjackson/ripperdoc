@@ -1,6 +1,5 @@
 @tool
 extends Control
-class_name HeartbeatUI
 
 @export var spacing := 10.0
 @export var speed := 20.0
