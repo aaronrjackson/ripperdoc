@@ -221,7 +221,7 @@ func _handle_command(raw: String) -> void:
 						return
 					else:
 						print("FORCIBLY REMOVED PATIENT")
-						output.append("you killed him...") #TODO: corny bruh delete this
+						output.append("you killed them...") #TODO: corny bruh delete this
 						GameManager.dismiss_character()
 						GameManager.next_character()
 						return
@@ -280,5 +280,5 @@ func _handle_command(raw: String) -> void:
 				_:
 					output.append("virus: unknown subcommand '" + args[0] + "'")
 		_:
-			output.append("ripperscript: '" + cmd + "' not found")
+			output.append("ripSH: '" + cmd + "' not found")
 			return
