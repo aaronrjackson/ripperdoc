@@ -7,7 +7,7 @@
 [ext_resource type="FontFile" uid="uid://b7cgby1b6ex2e" path="res://resources/fonts/CONSOLAI.TTF" id="5_icv5u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
-bg_color = Color(0.05342087, 0.053420886, 0.05342088, 1)
+bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
 
 [sub_resource type="GDScript" id="GDScript_cvdli"]
 script/source = "@tool
@@ -55,7 +55,8 @@ script = SubResource("GDScript_cvdli")
 [node name="TextBox" type="RichTextLabel" parent="MarginContainer" unique_id=1864314966]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/default_color = Color(0, 1, 0, 1)
+theme_override_colors/default_color = Color(0.8352941, 0.9137255, 0.4392157, 1)
+theme_override_colors/selection_color = Color(0.8352941, 0.9137255, 0.4392157, 0.47058824)
 theme_override_fonts/normal_font = ExtResource("1_sxuvd")
 theme_override_fonts/bold_font = ExtResource("3_cvdli")
 theme_override_fonts/bold_italics_font = ExtResource("4_i03jj")
