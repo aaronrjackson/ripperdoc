@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://c58txvm7p47cq"]
+[gd_scene format=3 uid="uid://dnkkkvxkan8om"]
 
-[ext_resource type="PackedScene" uid="uid://dkmj3sepejgmx" path="res://minigame.tscn" id="1_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://b084ftaik3fmy" path="res://patient.tscn" id="2_lquwl"]
+[ext_resource type="PackedScene" uid="uid://dffp8stj2gqim" path="res://minigame.tscn" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://c8eq7fjv5gsj1" path="res://patient.tscn" id="2_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
+[ext_resource type="PackedScene" uid="uid://61mqyi4tr7n6" path="res://minigames/brainwaves.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals.tscn" id="4_272bh"]
 
 [node name="main" type="Control" unique_id=1977246374]
@@ -35,6 +36,9 @@ size_flags_vertical = 3
 [node name="Minigame" parent="Panel/HBoxContainer/VBoxContainer" unique_id=131380338 instance=ExtResource("1_1bvp3")]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Brainwaves" parent="Panel/HBoxContainer/VBoxContainer/Minigame" unique_id=1247737040 instance=ExtResource("3_lquwl")]
+layout_mode = 1
 
 [node name="Patient" parent="Panel/HBoxContainer" unique_id=196831882 instance=ExtResource("2_lquwl")]
 layout_mode = 2

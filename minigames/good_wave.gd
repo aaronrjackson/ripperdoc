@@ -7,7 +7,8 @@ func _ready():
 @export var spacing := 10.0
 @export var speed := 20.0
 @export var amp := 50.0
-@export var point_count := 49
+@export var point_count := 54
+@export var x_offset := 50
 
 enum WaveType { ALPHA, BETA, THETA, DELTA, GAMMA }
 @export var wave_type: WaveType = WaveType.ALPHA
@@ -31,19 +32,19 @@ func _draw():
 		else:
 			y = randf_range(-0.5, 0.5)
 
-		var x = i * spacing
+		var x = i * spacing + x_offset
 
 		# Edge smoothing
 		if i == point_count - 1:
 			t -= 1
 			if not is_flat:
 				y = _get_wave_y(t)
-			x = (i - 0.999) * spacing
+			x = (i - 0.999) * spacing + x_offset
 		elif i == 0:
 			t += 1
 			if not is_flat:
 				y = _get_wave_y(t)
-			x = 0.999 * spacing
+			x = 0.999 * spacing + x_offset
 
 		points.append(Vector2(x, size.y / 2.0 + y))
 
