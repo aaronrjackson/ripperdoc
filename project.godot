@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ripperdoc"
-run/main_scene="uid://c58txvm7p47cq"
+run/main_scene="uid://dnkkkvxkan8om"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 

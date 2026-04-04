@@ -1,7 +1,7 @@
 extends Control
 
-@onready var load_dial = $VBoxContainer/HBoxContainer/LoadDial
-@onready var pressure_dial = $VBoxContainer/HBoxContainer/PressureDial
+@onready var load_dial = $VBoxContainer/DialsBackground/MarginContainer/HBoxContainer/LoadDial
+@onready var pressure_dial = $VBoxContainer/DialsBackground/MarginContainer/HBoxContainer/PressureDial
 
 func _ready() -> void:
 	GameManager.vitals_changed.connect(_on_vitals_changed)
