@@ -9,6 +9,9 @@ var current_input: String = ""
 var cursor_pos: int = 0
 var input_locked: bool = false
 var in_minigame: bool = false
+var minigame_commands: Array[String] = ["wave"]
+var saved_output: Array[String] = []
+var current_minigame_driver: String = ""
 
 const PROMPT: String = "$ "
 
@@ -91,6 +94,17 @@ func _input(event: InputEvent) -> void:
 	match event.keycode:
 		KEY_ENTER, KEY_KP_ENTER:
 			_submit()
+		KEY_C:
+			if event.ctrl_pressed and in_minigame:
+				in_minigame = false
+				GameManager.uninstall_driver(current_minigame_driver)  # ← undo install
+				_redraw()
+				return
+			if event.unicode > 0:
+				var ch = char(event.unicode)
+				current_input = current_input.left(cursor_pos) + ch + current_input.substr(cursor_pos)
+				cursor_pos += 1
+				_redraw()
 		KEY_BACKSPACE:
 			if cursor_pos > 0:
 				current_input = current_input.left(cursor_pos - 1) + current_input.substr(cursor_pos)
@@ -184,6 +198,14 @@ func _handle_command(raw: String) -> void:
 	var parts = raw.split(" ", false)
 	var cmd = parts[0]
 	var args = parts.slice(1)
+
+	if in_minigame and cmd not in minigame_commands:
+		output.append(cmd + ": not available during install process.")
+		return
+	if not in_minigame and cmd in minigame_commands:
+		output.append(cmd + ": no active install process.")
+		return
+		
 	match cmd:
 		"help":
 			if not args.is_empty():
@@ -255,12 +277,29 @@ func _handle_command(raw: String) -> void:
 						if driver.minigame_scene == null:
 							return
 							
-						var minigame = driver.minigame_scene.instantiate()
+						var minigame: Node = driver.minigame_scene.instantiate()
 						minigame_panel.add_child(minigame)
+						# set up minigame mode
+						saved_output = output.duplicate()
+						minigame_commands = minigame.commands.duplicate()
+						output.clear()
+						output.append("--- " + target + " ---")
+						output.append("type 'wave <amp/freq> <num>' to sync.")
+						output.append("ctrl+c to abort.")
+						output.append("")
+						current_minigame_driver = target
 						in_minigame = true
-						while (in_minigame):
+						_redraw()
+						while in_minigame:
 							await get_tree().process_frame
-						output.append(target + ": installed successfully.")
+						minigame_commands.clear()
+						output = saved_output.duplicate()
+						if GameManager.installed_drivers.has(current_minigame_driver):
+							output.append(target + ": installed successfully.")
+							minigame.queue_free()
+							return
+						output.append("^C")
+						output.append("install aborted.")
 						minigame.queue_free()
 						_redraw()
 						return
