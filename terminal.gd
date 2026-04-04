@@ -7,6 +7,7 @@ var history_index: int = -1
 var history_draft: String = ""
 var current_input: String = ""
 var cursor_pos: int = 0
+var input_locked: bool = false
 
 const PROMPT: String = "$ "
 
@@ -26,7 +27,16 @@ func _on_character_loaded(character: Character) -> void:
 	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
 
+func _get_max_lines() -> int:
+	var font = output_box.get_theme_font("normal_font")
+	var font_size = output_box.get_theme_font_size("normal_font_size")
+	var line_height = font.get_height(font_size)
+	return int(output_box.size.y / line_height)
+
 func _redraw() -> void:
+	var max_lines = _get_max_lines()
+	while output.size() > max_lines:
+		output.pop_front()
 	output_box.clear()
 	for line in output:
 		output_box.append_text(line + "\n")
@@ -36,6 +46,8 @@ func _redraw() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed:
+		return
+	if input_locked:
 		return
 	
 	# SLOW VIRUS
@@ -87,7 +99,7 @@ func _input(event: InputEvent) -> void:
 	# SLOW VIRUS: make inputs slow to input
 	if GameManager.has_virus(Virus.Type.SLOW):
 		slow_ready = false
-		await get_tree().create_timer(randf_range(0.05, 0.35)).timeout
+		await get_tree().create_timer(randf_range(0.05, 0.1)).timeout
 		slow_ready = true
 
 func _submit() -> void:
@@ -105,9 +117,6 @@ func _submit() -> void:
 	
 	_redraw()
 	
-	await get_tree().process_frame
-	var scrollbar = output_box.get_v_scroll_bar()
-	scrollbar.value = scrollbar.max_value
 
 func _navigate_history(direction: int) -> void:
 	# direction 1 -> up key
@@ -191,7 +200,11 @@ func _handle_command(raw: String) -> void:
 							output.append(target + ": already installed.")
 							return
 						# launch minigame here
-						output.append("loading " + target + "...")
+						output.append("installing " + target + "...")
+						input_locked = true
+						_redraw()
+						await get_tree().create_timer(randf_range(0.5, 1.0)).timeout
+						input_locked = false
 						# TODO: LAUNCH MINIGAME HERE
 						return
 			output.append("install: " + target + ": driver not found")
@@ -202,11 +215,16 @@ func _handle_command(raw: String) -> void:
 				return
 			if not args.is_empty():
 				if args[0] == "--force":
-					print("FORCIBLY REMOVED PATIENT")
-					output.append("you killed him...") #TODO: corny bruh delete this
-					GameManager.dismiss_character()
-					GameManager.next_character()
-					return
+					if GameManager.all_drivers_installed():
+						GameManager.dismiss_character()
+						GameManager.next_character()
+						return
+					else:
+						print("FORCIBLY REMOVED PATIENT")
+						output.append("you killed him...") #TODO: corny bruh delete this
+						GameManager.dismiss_character()
+						GameManager.next_character()
+						return
 			if not GameManager.all_drivers_installed():
 				output.append("patient still has missing drivers. run 'scan' to check.")
 				output.append("otherwise, run with --force to forcibly remove patient (NOT RECOMMENDED)")
@@ -221,8 +239,10 @@ func _handle_command(raw: String) -> void:
 			match args[0]:
 				"scan":
 					output.append("scanning for active processes...")
+					input_locked = true
 					_redraw()
 					await get_tree().create_timer(randf_range(3.0, 5.0)).timeout
+					input_locked = false
 					if GameManager.active_viruses.is_empty():
 						output.append("no hostile processes detected.")
 					else:
@@ -230,9 +250,6 @@ func _handle_command(raw: String) -> void:
 							var status = "quarantined" if v.quarantined else "ACTIVE"
 							output.append("pid %d [%s] -- %s" % [v.pid, v.type_name(), status])
 					_redraw()
-					await get_tree().process_frame
-					var scrollbar = output_box.get_v_scroll_bar()
-					scrollbar.value = scrollbar.max_value
 				"quarantine":
 					if args.size() < 2:
 						output.append("usage: virus quarantine <pid>")
@@ -249,8 +266,6 @@ func _handle_command(raw: String) -> void:
 					else:
 						output.append("process " + args[1] + " isolated.")
 					_redraw()
-					await get_tree().process_frame
-					output_box.get_v_scroll_bar().value = output_box.get_v_scroll_bar().max_value
 				"purge":
 					if args.size() > 1:
 						output.append("usage: virus purge")
