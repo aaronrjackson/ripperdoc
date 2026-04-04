@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ddf5csa45vp5l"]
 
-[ext_resource type="Script" uid="uid://m8vomlrajn15" path="res://vitals/heart_monitor.gd" id="1_wb8a7"]
+[ext_resource type="Script" uid="uid://m8vomlrajn15" path="res://vitals/rhythm_graph.gd" id="1_wb8a7"]
 [ext_resource type="Script" uid="uid://80n8bl0ga6cr" path="res://vitals/vitals.gd" id="1_ybwv6"]
 [ext_resource type="Script" uid="uid://b4ihnodwuudo7" path="res://vitals/neural_pressure.gd" id="2_tn2t3"]
 [ext_resource type="Script" uid="uid://b3itl8gua5rge" path="res://vitals/system_load.gd" id="3_tn2t3"]

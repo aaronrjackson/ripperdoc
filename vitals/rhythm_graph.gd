@@ -4,9 +4,16 @@ extends Control
 @export var amp_scale := -1.4
 @export var cycles_visible := 2 # how many heartbeat cycles fit on screen at once
 @export var is_flat := false
-const POINT_COUNT := 500  # more points = smoother curve
+@export var is_vfib := false
+const POINT_COUNT := 500  # more points = smoother curve (ish)
 
 var time := 0.0
+
+func _ready():
+	GameManager.vfib_started.connect(func(): is_vfib = true; is_flat = false)
+	GameManager.vfib_resolved.connect(func(): is_vfib = false; is_flat = false)
+	GameManager.character_loaded.connect(func(_c): is_vfib = false; is_flat = false)
+	GameManager.character_died.connect(func(): is_vfib = false; is_flat = true)
 
 func _physics_process(delta):
 	time += delta
@@ -16,21 +23,27 @@ func _draw():
 	var w = size.x
 	var h = size.y
 	var amp = h * 0.3 * amp_scale
-	var spacing = w / float(POINT_COUNT - 1)  # fills full width
+	var spacing = w / float(POINT_COUNT - 1) # fills full width
 	
 	var points := []
 	for i in range(POINT_COUNT):
 		var t = time * speed + i * (TAU * cycles_visible / POINT_COUNT)
-		var y = _ecg(t, amp) if not is_flat else randf_range(-0.5, 0.5)
-		var v_offset = h * 0.15  # shift down, adjust to taste
+		var y: float
+		if is_flat:
+			y = randf_range(-0.5, 0.5)
+		elif is_vfib:
+			y = _vfib(t, amp)
+		else:
+			y = _ecg(t, amp)
+		var v_offset = h * 0.15 # shift down, adjust to taste
 		points.append(Vector2(i * spacing, h / 2 + y + v_offset))
 	
 	if points.size() > 1:
-		var line_width = max(1.0, h * 0.03)  # line width scales too
+		var line_width = max(1.0, h * 0.03) # line width scales too
 		draw_polyline(points, Color.GREEN, line_width)
 
 func _ecg(t: float, amp: float) -> float:
-	var cycle = fmod(t, TAU)  # 0 to 2π per beat
+	var cycle = fmod(t, TAU) # 0 to 2pi per beat
 	
 	if cycle < 0.3:
 		# small P wave bump
@@ -56,6 +69,16 @@ func _ecg(t: float, amp: float) -> float:
 	else:
 		# flat until next beat
 		return 0.0
+
+func _vfib(t: float, amp: float) -> float:
+	var mult = 0.3
+	return (
+		sin(t * 3.7) * amp * mult * 0.6 +
+		sin(t * 7.3 + 1.2) * amp * mult * 0.4 +
+		sin(t * 2.1 + 0.5) * amp * mult * 0.3 +
+		cos(t * 5.9) * amp * mult * 0.5 +
+		randf_range(-amp * mult * 0.05, amp * mult * 0.05)  # slight noise
+	)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:

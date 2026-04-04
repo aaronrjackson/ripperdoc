@@ -14,6 +14,7 @@ static func create(t: Type) -> Virus:
 	v.type = t
 	v.quarantined = false
 	return v
+	# TODO: possible for two or more viruses (or vfib processes) to have the same pid needs fix
 
 func type_name() -> String:
 	match type:

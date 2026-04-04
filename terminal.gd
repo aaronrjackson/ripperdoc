@@ -18,6 +18,8 @@ var slow_ready: bool = true
 func _ready() -> void:
 	GameManager.character_loaded.connect(_on_character_loaded)
 	GameManager.character_died.connect(_on_character_died)
+	GameManager.vfib_started.connect(_on_vfib_started)
+	GameManager.vfib_resolved.connect(_on_vfib_resolved)
 	
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
@@ -26,19 +28,27 @@ func _ready() -> void:
 	_redraw()
 
 func _on_character_loaded(character: Character) -> void:
-	print("new character detected!")
+	print("new character " + character.character_name + " detected!")
 	output.append("")
 	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
 
 func _on_character_died():
-	var name = GameManager.current_character.character_name if GameManager.current_character else "patient"
-	output.append(name + " has perished...")
+	var char_name = GameManager.current_character.character_name if GameManager.current_character else "patient"
+	output.append(char_name + " has perished...")
 	input_locked = true
 	_redraw()
-	await get_tree().create_timer(5.0).timeout
+	await get_tree().create_timer(8.0).timeout
 	input_locked = false
 	GameManager.next_character()
+
+func _on_vfib_started() -> void:
+	output.append("WARNING: cardiac anomaly detected. run 'diagnose cardiac' immediately.")
+	_redraw()
+
+func _on_vfib_resolved() -> void:
+	output.append("cardiac rhythm restored.")
+	_redraw()
 
 func _get_max_lines() -> int:
 	var font = output_box.get_theme_font("normal_font")
@@ -225,7 +235,7 @@ func _handle_command(raw: String) -> void:
 				output.append("no patient in chair.")
 				return
 			if args.is_empty():
-				output.append("usage: install <driver>")
+				output.append("usage: install [driver]")
 				return
 			var target = args[0]
 			for cyberware in GameManager.current_character.cyberware:
@@ -283,7 +293,7 @@ func _handle_command(raw: String) -> void:
 			
 		"wave":
 			if args.size() < 2:
-				output.append("usage: bridge <amp/freq> <num>")
+				output.append("usage: bridge [amp/freq] [num]")
 				return
 			if args[0] == "amp":
 				if GameManager.amp_lock:
@@ -296,7 +306,7 @@ func _handle_command(raw: String) -> void:
 					return
 				GameManager.bad_wave_speed += args[1].to_int()
 			else:
-				output.append("usage: bridge <amp/freq> <num>")
+				output.append("usage: bridge [amp/freq] [num]")
 				
 			if ((GameManager.good_wave_amp > GameManager.bad_wave_amp - 5) && (GameManager.good_wave_amp < GameManager.bad_wave_amp + 5)) && !GameManager.amp_lock:
 				output.append("AMPLITUDE LOCK")
@@ -311,7 +321,7 @@ func _handle_command(raw: String) -> void:
 			
 		"virus":
 			if args.is_empty():
-				output.append("usage: virus <scan|quarantine|purge>")
+				output.append("usage: virus [scan|quarantine|purge]")
 				return
 			match args[0]:
 				"scan":
@@ -329,7 +339,7 @@ func _handle_command(raw: String) -> void:
 					_redraw()
 				"quarantine":
 					if args.size() < 2:
-						output.append("usage: virus quarantine <pid>")
+						output.append("usage: virus quarantine [pid]")
 						return
 					var pid = args[1].to_int()
 					if not GameManager.valid_virus(pid):
@@ -369,7 +379,46 @@ func _handle_command(raw: String) -> void:
 			GameManager.allocate(amount)
 			output.append("allocated " + args[0] + " neural resources.")
 			return
+		"diagnose":
+			if args.is_empty() or args[0] != "cardiac":
+				output.append("usage: diagnose cardiac")
+				return
+			if not GameManager.in_vfib:
+				output.append("diagnose: no cardiac anomaly detected.")
+				return
+			output.append("WARNING: ventricular fibrillation detected.")
+			output.append("conflicting processes:")
+			for p in GameManager.vfib_processes:
+				output.append("  PID %d  %-30s [%s]" % [p["pid"], p["name"], p["desc"]])
+			output.append("run 'kill [pid]' to terminate the offending process.")
+			return
+
+		"kill":
+			if args.is_empty():
+				output.append("usage: kill [pid]")
+				return
+			if not GameManager.in_vfib:
+				output.append("kill: no active cardiac event.")
+				return
+			var pid = args[0].to_int()
+			var valid = false
+			for p in GameManager.vfib_processes:
+				if p["pid"] == pid:
+					valid = true
+					break
+			if not valid:
+				output.append("kill: pid " + args[0] + " not found.")
+				return
+			if GameManager.vfib_kill(pid):
+				output.append("process terminated. cardiac rhythm stabilizing...")
+			else:
+				if GameManager.vfib_mistakes >= 2:
+					return  # already dead, _kill_character fired
+				output.append("WARNING: wrong process. cardiac event worsening.")
+				output.append("time remaining critical. one attempt left.")
+			return
 		_:
 			output.append("ripSH: '" + cmd + "' not found")
 			GameManager.add_load(0.03)
 			return
+		
