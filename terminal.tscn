@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cv0a34so8ikvi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Terminal" type="Control" unique_id=270556858]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="." unique_id=1395345048]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yrvhh")
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=1494823976]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+placeholder_text = "$ placeholder text"

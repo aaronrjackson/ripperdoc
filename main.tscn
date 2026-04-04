@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://c58txvm7p47cq"]
+
+[ext_resource type="PackedScene" uid="uid://dkmj3sepejgmx" path="res://minigame.tscn" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b084ftaik3fmy" path="res://patient.tscn" id="2_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
+[ext_resource type="PackedScene" uid="uid://ct64fgrkxeaeu" path="res://vitals.tscn" id="4_272bh"]
+
+[node name="main" type="Control" unique_id=1977246374]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1704384430]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=973832053]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxContainer" unique_id=421180687]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Vitals" parent="Panel/HBoxContainer/VBoxContainer" unique_id=157513893 instance=ExtResource("4_272bh")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Minigame" parent="Panel/HBoxContainer/VBoxContainer" unique_id=131380338 instance=ExtResource("1_1bvp3")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Patient" parent="Panel/HBoxContainer" unique_id=196831882 instance=ExtResource("2_lquwl")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Terminal" parent="Panel/HBoxContainer" unique_id=270556858 instance=ExtResource("3_7mycd")]
+layout_mode = 2

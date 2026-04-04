@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://b084ftaik3fmy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b6tqj"]
+bg_color = Color(0, 0.6803844, 0.72869664, 1)
+
+[node name="Patient" type="Control" unique_id=196831882]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=306635567]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b6tqj")
