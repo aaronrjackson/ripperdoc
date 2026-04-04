@@ -19,7 +19,6 @@ func _ready() -> void:
 
 func _on_character_loaded(character: Character) -> void:
 	print("new character detected!")
-	output.append(character.flavor_text)
 	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
 
@@ -101,15 +100,24 @@ func _handle_command(raw: String) -> void:
 	var args = parts.slice(1)
 	match cmd:
 		"help":
-			output.append("Available commands:\n- help\n- echo\n- clear\n- scan\n- install\n")
+			if not args.is_empty():
+				output.append("usage: help")
+				return
+			output.append("Available commands:\n- help\n- echo\n- clear\n- scan\n- install")
 			return
 		"echo":
 			output.append(" ".join(args))
 			return
 		"clear":
+			if not args.is_empty():
+				output.append("usage: clear")
+				return
 			output.clear()
 			return
 		"scan":
+			if not args.is_empty():
+				output.append("usage: scan")
+				return
 			if GameManager.current_character == null:
 				output.append("no patient in chair.")
 				return
