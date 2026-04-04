@@ -5,19 +5,19 @@
 [ext_resource type="Script" uid="uid://b3itl8gua5rge" path="res://Load_Graph.gd" id="3_tn2t3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqcys"]
-bg_color = Color(0.29911864, 0.29910892, 0.27660504, 1)
+bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41vlj"]
-bg_color = Color(0.13878343, 0.13590151, 0.124456845, 1)
+bg_color = Color(0.99215686, 0.003921569, 0.3372549, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndjm8"]
 bg_color = Color(0.22430411, 0.22430411, 0.22430399, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wb8a7"]
-bg_color = Color(0.29803923, 0.29803923, 0.2784314, 1)
+bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tn2t3"]
-bg_color = Color(0.29803923, 0.29803923, 0.2784314, 1)
+bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
 
 [node name="Vitals" type="Control" unique_id=157513893]
 layout_mode = 3
