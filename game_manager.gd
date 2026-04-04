@@ -3,6 +3,13 @@ extends Node
 var roster: CharacterRoster
 var current_character: Character = null
 var installed_drivers: Array[String] = []
+var bad_wave_speed: int = 0
+var bad_wave_amp: int = 0
+var good_wave_speed: int = 0
+var good_wave_amp: int = 0
+var amp_lock: bool = false
+var speed_lock: bool = false
+
 
 signal character_loaded(character: Character)
 signal driver_installed(driver_name: String)
