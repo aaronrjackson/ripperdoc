@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c8eq7fjv5gsj1" path="res://patient.tscn" id="2_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://61mqyi4tr7n6" path="res://minigames/brainwaves.tscn" id="3_lquwl"]
-[ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals.tscn" id="4_272bh"]
+[ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]
 
 [node name="main" type="Control" unique_id=1977246374]
 layout_mode = 3

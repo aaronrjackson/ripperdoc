@@ -1,7 +1,7 @@
 extends Panel
 
 @export var radius := 100
-var fill := 2.5
+@export var fill := 2.5
 
 func _draw():
 	# Center of the Panel
