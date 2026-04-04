@@ -8,6 +8,7 @@ var history_draft: String = ""
 var current_input: String = ""
 var cursor_pos: int = 0
 var input_locked: bool = false
+var in_minigame: bool = false
 
 const PROMPT: String = "$ "
 
@@ -217,7 +218,20 @@ func _handle_command(raw: String) -> void:
 						_redraw()
 						await get_tree().create_timer(randf_range(0.5, 1.0)).timeout
 						input_locked = false
-						# TODO: LAUNCH MINIGAME HERE
+						
+						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
+						if driver.minigame_scene == null:
+							return
+							
+						var minigame = driver.minigame_scene.instantiate()
+						minigame_panel.add_child(minigame)
+						in_minigame = true
+						while (in_minigame):
+							await get_tree().process_frame
+							print("in loop")
+						output.append(target + ": installed successfully.")
+						minigame.queue_free()
+						_redraw()
 						return
 			output.append("install: " + target + ": driver not found")
 			return
@@ -270,6 +284,7 @@ func _handle_command(raw: String) -> void:
 			
 			if GameManager.speed_lock && GameManager.amp_lock:
 				output.append("Waves Synced")
+				in_minigame = false
 			
 		"virus":
 			if args.is_empty():
