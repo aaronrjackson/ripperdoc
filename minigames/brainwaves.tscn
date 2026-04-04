@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://61mqyi4tr7n6"]
+
+[ext_resource type="Script" uid="uid://b4u5tu5fuc6e6" path="res://minigames/bad_wave.gd" id="1_cujqh"]
+[ext_resource type="Script" uid="uid://gwrbt7enu23x" path="res://minigames/good_wave.gd" id="2_x3khe"]
+
+[node name="Brainwaves" type="Control" unique_id=1247737040]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bad_wave" type="Panel" parent="." unique_id=1188995265]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cujqh")
+x_offset = 60
+wave_type = 2
+
+[node name="good_wave" type="Panel" parent="." unique_id=1245125930]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_x3khe")
+x_offset = 60
+wave_type = 2

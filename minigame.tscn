@@ -1,7 +1,13 @@
-[gd_scene format=3 uid="uid://dkmj3sepejgmx"]
+[gd_scene format=3 uid="uid://dffp8stj2gqim"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3n4wl"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.5079715, 0.5079715, 0.5079715, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4bqly"]
+bg_color = Color(0.14502001, 0.14318877, 0.13436651, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k7ghj"]
+bg_color = Color(0.23193422, 0.3549041, 0.15424728, 1)
 
 [node name="Minigame" type="Control" unique_id=131380338]
 custom_minimum_size = Vector2(100, 100)
@@ -20,3 +26,35 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3n4wl")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=915541067]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="Panel" type="Panel" parent="Panel/MarginContainer" unique_id=1301845884]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4bqly")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/Panel" unique_id=427061169]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Panel" type="Panel" parent="Panel/MarginContainer/Panel/MarginContainer" unique_id=852941683]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k7ghj")
