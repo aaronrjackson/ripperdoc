@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://b4u5tu5fuc6e6" path="res://minigames/bad_wave.gd" id="1_cujqh"]
 [ext_resource type="Script" uid="uid://gwrbt7enu23x" path="res://minigames/good_wave.gd" id="2_x3khe"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x3khe"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ijdx2"]
+
 [node name="Brainwaves" type="Control" unique_id=1247737040]
 layout_mode = 3
 anchors_preset = 15
@@ -18,9 +22,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_x3khe")
 script = ExtResource("1_cujqh")
-x_offset = 60
-wave_type = 2
+point_count = 53
 
 [node name="good_wave" type="Panel" parent="." unique_id=1245125930]
 layout_mode = 1
@@ -29,6 +33,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ijdx2")
 script = ExtResource("2_x3khe")
-x_offset = 60
-wave_type = 2
+point_count = 53

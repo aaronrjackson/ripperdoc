@@ -2,8 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://cfli1l0e1vayy" path="res://dummy2.png" id="1_solxw"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b6tqj"]
-bg_color = Color(0, 0.6803844, 0.72869664, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_solxw"]
+bg_color = Color(0.011764706, 0.99607843, 0.8352941, 1)
 
 [node name="Patient" type="Control" unique_id=196831882]
 custom_minimum_size = Vector2(100, 100)
@@ -21,7 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_b6tqj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_solxw")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2075277804]
 layout_mode = 1
