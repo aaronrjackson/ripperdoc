@@ -5,9 +5,7 @@ extends Control
 @export var speed := 20.0
 @export var amp := 50.0
 @export var point_count := 59
-
-# NEW: toggle between flat line and heartbeat
-@export var is_flat := false
+@export var is_flat := false # flatline
 
 var time := 0.0
 
