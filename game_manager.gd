@@ -224,7 +224,7 @@ func reset_vitals() -> void:
 	system_load = 0.0
 	neural_pressure = 0.0
 	# randomize pressure rate per character
-	pressure_rate = randf_range(0.001, 0.03)
+	pressure_rate = randf_range(0.005, 0.025)
 	# occasionally spike mid-session
 	_schedule_pressure_spike()
 

@@ -25,6 +25,7 @@ func _ready() -> void:
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
 	output.append("")
+	await get_tree().process_frame  # wait for layout to compute sizes
 	_redraw()
 
 func _on_character_loaded(character: Character) -> void:
