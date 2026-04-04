@@ -15,3 +15,7 @@ func _draw():
 
 func _ready() -> void:
 	queue_redraw()
+
+func set_fill(value: float) -> void:
+	fill = clamp(value, 0.0, 1.0)
+	queue_redraw()

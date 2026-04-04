@@ -55,6 +55,9 @@ func _input(event: InputEvent) -> void:
 	if input_locked:
 		return
 	
+	if event.keycode != KEY_ENTER and event.keycode != KEY_KP_ENTER:
+		GameManager.add_load(0.001) # per keypress
+	
 	# SLOW VIRUS
 	if GameManager.has_virus(Virus.Type.SLOW) and not slow_ready:
 		# ignore inputs
@@ -70,6 +73,7 @@ func _input(event: InputEvent) -> void:
 				current_input = current_input.left(cursor_pos - 1) + current_input.substr(cursor_pos)
 				cursor_pos -= 1
 				_redraw()
+			GameManager.add_load(0.005) 
 		KEY_UP:
 			_navigate_history(1)
 		KEY_DOWN:
@@ -291,6 +295,19 @@ func _handle_command(raw: String) -> void:
 					# TODO: spike vitals stub
 				_:
 					output.append("virus: unknown subcommand '" + args[0] + "'")
+		"allocate":
+			if args.is_empty():
+				output.append("usage: allocate [amount]")
+				return
+			var amount = args[0].to_float()
+			if amount <= 0.0 or amount > 1.0:
+				output.append("allocate: value must be between 0.0 and 1.0")
+				GameManager.add_load(0.05)
+				return
+			GameManager.allocate(amount)
+			output.append("allocated " + args[0] + " neural resources.")
+			return
 		_:
 			output.append("ripSH: '" + cmd + "' not found")
+			GameManager.add_load(0.03)
 			return

@@ -24,6 +24,20 @@ func _ready() -> void:
 	_load_names()
 	call_deferred("next_character")
 
+func _process(delta: float) -> void:
+	if current_character == null:
+		return
+	neural_pressure += pressure_rate * delta
+	neural_pressure = clamp(neural_pressure, 0.0, 1.0) # snsure always within bounds
+	vitals_changed.emit(system_load, neural_pressure) # update vitals
+	if neural_pressure >= 1.0 or system_load >= 1.0: # kill if too high
+		_kill_patient()
+
+func _kill_patient() -> void:
+	patient_died.emit()
+	dismiss_character()  # clears state
+	# next_character() called by terminal after death sequence plays out
+
 #region CHARACTER
 
 func _load_names() -> void:
@@ -47,6 +61,7 @@ func next_character() -> void:
 func load_character(character: Character) -> void:
 	current_character = character
 	installed_drivers.clear()
+	reset_vitals()
 	character_loaded.emit(character)
 	_maybe_upload_viruses(character) # starts random virus upload timer
 	
@@ -174,7 +189,38 @@ func has_virus(type: Virus.Type) -> bool:
 
 #region VITALS
 
-func add_load(amount: float):
-	system_load += amount
+func add_load(amount: float) -> void:
+	system_load = clamp(system_load + amount, 0.0, 1.0) # add
+	vitals_changed.emit(system_load, neural_pressure)
+	if system_load >= 1.0:
+		_kill_patient()
+
+func allocate(amount: float) -> void:
+	# allocating too much kills patient
+	if amount > neural_pressure + 0.3:
+		_kill_patient()
+		return
+	neural_pressure = clamp(neural_pressure - amount, 0.0, 1.0)
+	add_load(amount * 0.6)  # allocating costs system load
+
+func reset_vitals() -> void:
+	system_load = 0.0
+	neural_pressure = 0.0
+	# randomize pressure rate per patient
+	pressure_rate = randf_range(0.001, 0.03)
+	# occasionally spike mid-session
+	_schedule_pressure_spike()
+
+func spike_pressure_rate(spiked_rate: float, duration: float) -> void:
+	var og_pressure_rate = pressure_rate # save the original pressure rate
+	pressure_rate = spiked_rate
+	await get_tree().create_timer(duration).timeout
+	pressure_rate = og_pressure_rate  # back to base
+
+func _schedule_pressure_spike() -> void:
+	await get_tree().create_timer(randf_range(5.0, 20.0)).timeout # random time until spike
+	if current_character == null:
+		return
+	spike_pressure_rate(randf_range(0.04, 0.06), randf_range(1.5, 4.0))
 
 #endregion
