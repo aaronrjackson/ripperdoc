@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://cx7u4l30j78j7"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_lq6ae"]
+
+[resource]
+script = ExtResource("1_lq6ae")
+driver_name = "optic_stabilizer.drv"
+display_name = "Optic Stabilization Module"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

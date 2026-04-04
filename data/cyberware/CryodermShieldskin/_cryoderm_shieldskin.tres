@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://cwb6x2exaw3jn"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_0qogp"]
+[ext_resource type="Resource" uid="uid://daervuqynyrx8" path="res://data/cyberware/CryodermShieldskin/cryo_cycle.tres" id="2_tmpdm"]
+[ext_resource type="Resource" uid="uid://wc8623c3y8cg" path="res://data/cyberware/CryodermShieldskin/frost_guard.tres" id="3_484fv"]
+[ext_resource type="Resource" uid="uid://dp4e0tinm0cao" path="res://data/cyberware/CryodermShieldskin/heat_dispersion.tres" id="4_243oy"]
+[ext_resource type="Resource" uid="uid://ddwp3livfmm84" path="res://data/cyberware/CryodermShieldskin/skin_monitor.tres" id="5_eoprs"]
+[ext_resource type="Resource" uid="uid://bhyds6s6mfkn" path="res://data/cyberware/CryodermShieldskin/thermo_regulator.tres" id="6_3gb4i"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="7_lrd5m"]
+
+[resource]
+script = ExtResource("7_lrd5m")
+device_name = "Cryoerm Shieldskin"
+manufacturer = "Glacient Biotech"
+drivers = Array[ExtResource("1_0qogp")]([ExtResource("2_tmpdm"), ExtResource("3_484fv"), ExtResource("4_243oy"), ExtResource("5_eoprs"), ExtResource("6_3gb4i")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://dmef2pj725snu"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_ya4ea"]
+
+[resource]
+script = ExtResource("1_ya4ea")
+driver_name = "retina_mapper.drv"
+display_name = "Retina Mapper"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

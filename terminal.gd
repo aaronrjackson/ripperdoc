@@ -10,15 +10,16 @@ var current_input: String = ""
 const PROMPT: String = "$ "
 
 func _ready() -> void:
-	GameManager.customer_loaded.connect(_on_customer_loaded)
+	GameManager.character_loaded.connect(_on_character_loaded)
 	
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
+	output.append("")
 	_redraw()
 
-func _on_customer_loaded(customer: Customer) -> void:
-	print("new customer detected!")
-	output.append(customer.flavor_text)
+func _on_character_loaded(character: Character) -> void:
+	print("new character detected!")
+	output.append(character.flavor_text)
 	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
 
@@ -109,12 +110,12 @@ func _handle_command(raw: String) -> void:
 			output.clear()
 			return
 		"scan":
-			if GameManager.current_customer == null:
+			if GameManager.current_character == null:
 				output.append("no patient in chair.")
 				return
 			
-			output.append("PATIENT: " + GameManager.current_customer.customer_name)
-			for cyberware in GameManager.current_customer.cyberware:
+			output.append("PATIENT: " + GameManager.current_character.character_name)
+			for cyberware in GameManager.current_character.cyberware:
 				output.append("[" + cyberware.manufacturer + "] " + cyberware.device_name)
 				for driver in cyberware.drivers:
 					var status: String = "MISSING"
@@ -123,23 +124,35 @@ func _handle_command(raw: String) -> void:
 					output.append("- " + driver.driver_name + " [" + status + "]")
 			return
 		"install":
-			if GameManager.current_customer == null:
+			if GameManager.current_character == null:
 				output.append("no patient in chair.")
 				return
 			if args.is_empty():
 				output.append("usage: install <driver>")
 				return
 			var target = args[0]
-			for ware in GameManager.current_customer.cyberware:
-				for drv in ware.drivers:
-					if drv.driver_name == target:
+			for cyberware in GameManager.current_character.cyberware:
+				for driver in cyberware.drivers:
+					if driver.driver_name == target:
 						if not GameManager.install_driver(target):
 							output.append(target + ": already installed.")
 							return
 						# launch minigame here
 						output.append("loading " + target + "...")
+						# TODO: LAUNCH MINIGAME HERE
 						return
 			output.append("install: " + target + ": driver not found")
+			return
+		"dismiss":
+			if GameManager.current_character == null:
+				output.append("no patient in chair.")
+				return
+			if not GameManager.all_drivers_installed():
+				output.append("patient still has missing drivers. run 'scan' to check.")
+				return
+			GameManager.dismiss_character()
+			GameManager.next_character()
+			return
 		_:
 			output.append("ripperscript: '" + cmd + "' not found")
-	
+			return

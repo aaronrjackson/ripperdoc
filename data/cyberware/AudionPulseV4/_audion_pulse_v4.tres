@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://bt4g31a7bf640"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_1ipo1"]
+[ext_resource type="Resource" uid="uid://b111uk1mrqy4j" path="res://data/cyberware/AudionPulseV4/audion_syncbus.tres" id="2_pirxi"]
+[ext_resource type="Resource" uid="uid://cbh11lvd0yfvt" path="res://data/cyberware/AudionPulseV4/echo_nullifier.tres" id="3_b8bd1"]
+[ext_resource type="Resource" uid="uid://nhvjood1nsnj" path="res://data/cyberware/AudionPulseV4/freq_shaper.tres" id="4_6mpxj"]
+[ext_resource type="Resource" uid="uid://dcvgefx2gs160" path="res://data/cyberware/AudionPulseV4/neuro_resonance.tres" id="5_i71jr"]
+[ext_resource type="Resource" uid="uid://ddv1cfquu6rkx" path="res://data/cyberware/AudionPulseV4/pulse_dsp_core.tres" id="6_db6ds"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="7_20pfo"]
+
+[resource]
+script = ExtResource("7_20pfo")
+device_name = "Audion Pulse V4"
+manufacturer = "Kishiki Audio Labs"
+drivers = Array[ExtResource("1_1ipo1")]([ExtResource("2_pirxi"), ExtResource("3_b8bd1"), ExtResource("4_6mpxj"), ExtResource("5_i71jr"), ExtResource("6_db6ds")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

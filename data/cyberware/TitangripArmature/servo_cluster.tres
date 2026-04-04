@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://du41ggso3egqh"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_vsmt7"]
+
+[resource]
+script = ExtResource("1_vsmt7")
+driver_name = "servo_cluster.drv"
+display_name = "Servo Cluster Controller"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

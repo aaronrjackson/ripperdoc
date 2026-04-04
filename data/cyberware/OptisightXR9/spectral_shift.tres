@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://clbo6ak3rumku"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_q6vs4"]
+
+[resource]
+script = ExtResource("1_q6vs4")
+driver_name = "spectral_shift.drv"
+display_name = "Spectral Shift Processor"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

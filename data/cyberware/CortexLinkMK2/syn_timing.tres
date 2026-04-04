@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://bhsr7ktdo5uv1"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_uw0q5"]
+
+[resource]
+script = ExtResource("1_uw0q5")
+driver_name = "syn_timing.drv"
+display_name = "Synaptic Timing Regulator"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

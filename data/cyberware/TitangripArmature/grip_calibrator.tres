@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://bm4ym2pv85t4o"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_n5gb6"]
+
+[resource]
+script = ExtResource("1_n5gb6")
+driver_name = "grip_calibrator.drv"
+display_name = "Grip Calibration Module"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

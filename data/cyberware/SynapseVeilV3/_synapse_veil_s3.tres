@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://b40jm4ql4pc5s"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_5455t"]
+[ext_resource type="Resource" uid="uid://cni3ao8rvmxkv" path="res://data/cyberware/SynapseVeilV3/intrusion_logger.tres" id="2_ijy0n"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="2_lplaa"]
+[ext_resource type="Resource" uid="uid://b5kjwkvhxqfx0" path="res://data/cyberware/SynapseVeilV3/neuro_firewall.tres" id="3_n6oxo"]
+[ext_resource type="Resource" uid="uid://bqak8elrtiq0l" path="res://data/cyberware/SynapseVeilV3/pattern_noise.tres" id="4_gf76w"]
+[ext_resource type="Resource" uid="uid://dv40oubmcvpvq" path="res://data/cyberware/SynapseVeilV3/psi_scrambler.tres" id="5_c4jwm"]
+[ext_resource type="Resource" uid="uid://c7rlyb8s6vbxr" path="res://data/cyberware/SynapseVeilV3/thought_mask.tres" id="6_aypam"]
+
+[resource]
+script = ExtResource("2_lplaa")
+device_name = "Synapse Veil S3"
+manufacturer = "Nocturne Systems"
+drivers = Array[ExtResource("1_5455t")]([ExtResource("2_ijy0n"), ExtResource("3_n6oxo"), ExtResource("4_gf76w"), ExtResource("5_c4jwm"), ExtResource("6_aypam")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

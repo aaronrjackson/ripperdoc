@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://cmpkxxfghcik6"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_4b85h"]
+[ext_resource type="Resource" uid="uid://cfpvb51lprgv2" path="res://data/cyberware/CortexLinkMK2/mem_cache_alloc.tres" id="2_ovx4m"]
+[ext_resource type="Resource" uid="uid://bom3kyv2l3fvv" path="res://data/cyberware/CortexLinkMK2/neural_bus.tres" id="3_o4q0n"]
+[ext_resource type="Resource" uid="uid://b7sy4mhy0ar2t" path="res://data/cyberware/CortexLinkMK2/neuro_bridge.tres" id="4_belp4"]
+[ext_resource type="Resource" uid="uid://b1x3tp4jqqd1u" path="res://data/cyberware/CortexLinkMK2/noise_filter.tres" id="5_bwtdc"]
+[ext_resource type="Resource" uid="uid://bhsr7ktdo5uv1" path="res://data/cyberware/CortexLinkMK2/syn_timing.tres" id="6_6cvgq"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="7_k36gl"]
+
+[resource]
+script = ExtResource("7_k36gl")
+device_name = "Cortex Link MK2"
+manufacturer = "Synthcast Corp"
+drivers = Array[ExtResource("1_4b85h")]([ExtResource("2_ovx4m"), ExtResource("3_o4q0n"), ExtResource("4_belp4"), ExtResource("5_bwtdc"), ExtResource("6_6cvgq")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

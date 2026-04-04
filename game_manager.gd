@@ -1,22 +1,70 @@
 extends Node
 
-var current_customer: Customer = null
+var roster: CharacterRoster
+var current_character: Character = null
 var installed_drivers: Array[String] = []
 
-signal customer_loaded(customer: Customer)
+signal character_loaded(character: Character)
 signal driver_installed(driver_name: String)
-signal customer_dismissed
+signal character_dismissed
 
 func _ready() -> void:
-	randomize()
-	#TODO: TEMP TEST REMOVE ME LATER!!!
-	call_deferred("load_customer", load("res://customer/customers/test_customer.tres"))
+	roster = load("res://data/character_roster.tres")
+	_load_names()
+	call_deferred("next_character")
 
-func load_customer(customer: Customer) -> void:
-	current_customer = customer
+func _load_names() -> void:
+	var file = FileAccess.open("res://data/names.txt", FileAccess.READ)
+	if file == null:
+		print("ERROR: could not open names.txt")
+		return
+	roster.names.clear()
+	while not file.eof_reached():
+		var line = file.get_line().strip_edges()
+		if line != "":
+			roster.names.append(line)
+	file.close()
+	print("loaded ", roster.names.size(), " names")
+
+func next_character() -> void:
+	if roster == null:
+		return
+	load_character(_generate_character())
+
+func load_character(character: Character) -> void:
+	current_character = character
 	installed_drivers.clear()
-	customer_loaded.emit(customer)
-	print("loaded new customer: " + customer.customer_name)
+	character_loaded.emit(character)
+	
+func _generate_character() -> Character:
+	var c = Character.new()
+	
+	# pick random name
+	c.character_name = roster.names.pick_random()
+	
+	# pick random cyberware (no duplicates)
+	var cyberware_pool = roster.cyberware_pool.duplicate()
+	cyberware_pool.shuffle()
+	var ware_count = randi_range(1, 3) # choose 1-3 random cyberware
+
+	var cyberware: Array[Cyberware] = []
+	for i in ware_count:
+		var ware = cyberware_pool[i].duplicate()
+		ware.drivers = _pick_drivers(ware)
+		cyberware.append(ware)
+	c.cyberware = cyberware
+	
+	return c
+
+func _pick_drivers(ware: Cyberware) -> Array[Driver]:
+	var pool = ware.drivers.duplicate()
+	pool.shuffle()
+	var count = randi_range(1, 3)
+	count = min(count, pool.size())
+	var result: Array[Driver] = []
+	for i in count:
+		result.append(pool[i])
+	return result
 
 func install_driver(driver_name: String) -> bool:
 	if driver_name in installed_drivers:
@@ -27,15 +75,15 @@ func install_driver(driver_name: String) -> bool:
 	return true
 
 func all_drivers_installed() -> bool:
-	if current_customer == null:
+	if current_character == null:
 		return false
-	for cyberware in current_customer.cyberware:
+	for cyberware in current_character.cyberware:
 		for driver in cyberware.drivers:
 			if driver.driver_name not in installed_drivers:
 				return false
 	return true
 
-func dismiss_customer() -> void:
-	current_customer = null
+func dismiss_character() -> void:
+	current_character = null
 	installed_drivers.clear()
-	customer_dismissed.emit()
+	character_dismissed.emit()

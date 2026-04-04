@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://ejscv7r8icpc"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_1b6lp"]
+
+[resource]
+script = ExtResource("1_1b6lp")
+driver_name = "torque_balancer.drv"
+display_name = "Torque Balancing System"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

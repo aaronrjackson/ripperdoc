@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://bqak8elrtiq0l"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_1vpnl"]
+
+[resource]
+script = ExtResource("1_1vpnl")
+driver_name = "pattern_noise.drv"
+display_name = "Pattern Noise Generator"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://cfpvb51lprgv2"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_8pqga"]
+
+[resource]
+script = ExtResource("1_8pqga")
+driver_name = "mem_cache_alloc.drv"
+display_name = "Memory Cache Allocator"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://dheu0qdctwcef"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_j30jg"]
+[ext_resource type="Resource" uid="uid://7nxvcg533kn7" path="res://data/cyberware/TitangripArmature/force_feedback.tres" id="2_sxcnj"]
+[ext_resource type="Resource" uid="uid://bm4ym2pv85t4o" path="res://data/cyberware/TitangripArmature/grip_calibrator.tres" id="3_k5tbc"]
+[ext_resource type="Resource" uid="uid://iapuvy575yb8" path="res://data/cyberware/TitangripArmature/kinetic_predictor.tres" id="4_5glvf"]
+[ext_resource type="Resource" uid="uid://du41ggso3egqh" path="res://data/cyberware/TitangripArmature/servo_cluster.tres" id="5_v08qj"]
+[ext_resource type="Resource" uid="uid://ejscv7r8icpc" path="res://data/cyberware/TitangripArmature/torque_balancer.tres" id="6_xgkr7"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="7_k3g1m"]
+
+[resource]
+script = ExtResource("7_k3g1m")
+device_name = "Titangrip Armature"
+manufacturer = "Xeta Group"
+drivers = Array[ExtResource("1_j30jg")]([ExtResource("2_sxcnj"), ExtResource("3_k5tbc"), ExtResource("4_5glvf"), ExtResource("5_v08qj"), ExtResource("6_xgkr7")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

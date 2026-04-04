@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Cyberware" format=3 uid="uid://cqccf5ix6fyuq"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_tuepd"]
+[ext_resource type="Resource" uid="uid://cplu2bswiitnw" path="res://data/cyberware/OptisightXR9/depth_solver.tres" id="2_j4804"]
+[ext_resource type="Resource" uid="uid://cx7u4l30j78j7" path="res://data/cyberware/OptisightXR9/optic_stabilizer.tres" id="3_44ds4"]
+[ext_resource type="Resource" uid="uid://dmef2pj725snu" path="res://data/cyberware/OptisightXR9/retina_mapper.tres" id="4_gh7my"]
+[ext_resource type="Resource" uid="uid://clbo6ak3rumku" path="res://data/cyberware/OptisightXR9/spectral_shift.tres" id="5_hglv6"]
+[ext_resource type="Resource" uid="uid://cvkxrsxpnubo2" path="res://data/cyberware/OptisightXR9/xr_overlay.tres" id="6_rpln8"]
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="7_dksnt"]
+
+[resource]
+script = ExtResource("7_dksnt")
+device_name = "OptiSight XR-9"
+manufacturer = "Helix Optics"
+drivers = Array[ExtResource("1_tuepd")]([ExtResource("2_j4804"), ExtResource("3_44ds4"), ExtResource("4_gh7my"), ExtResource("5_hglv6"), ExtResource("6_rpln8")])
+metadata/_custom_type_script = "uid://ci7sucihnrmiu"

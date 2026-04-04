@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CharacterRoster" format=3 uid="uid://dlqu87adsn0h3"]
+
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://data/cyberware.gd" id="1_ioaav"]
+[ext_resource type="Resource" uid="uid://bt4g31a7bf640" path="res://data/cyberware/AudionPulseV4/_audion_pulse_v4.tres" id="2_got4n"]
+[ext_resource type="Script" uid="uid://c5b5kvedlevwy" path="res://data/character_roster.gd" id="2_kf5qb"]
+[ext_resource type="Resource" uid="uid://cmpkxxfghcik6" path="res://data/cyberware/CortexLinkMK2/_cortex_link_mk2.tres" id="3_tsy5h"]
+[ext_resource type="Resource" uid="uid://cwb6x2exaw3jn" path="res://data/cyberware/CryodermShieldskin/_cryoderm_shieldskin.tres" id="4_e2tnc"]
+[ext_resource type="Resource" uid="uid://cqccf5ix6fyuq" path="res://data/cyberware/OptisightXR9/_optisight_xr9.tres" id="5_uwt4o"]
+[ext_resource type="Resource" uid="uid://b40jm4ql4pc5s" path="res://data/cyberware/SynapseVeilV3/_synapse_veil_s3.tres" id="6_b2l55"]
+[ext_resource type="Resource" uid="uid://dheu0qdctwcef" path="res://data/cyberware/TitangripArmature/_titangrip_armature.tres" id="7_7lwn7"]
+
+[resource]
+script = ExtResource("2_kf5qb")
+cyberware_pool = Array[ExtResource("1_ioaav")]([ExtResource("2_got4n"), ExtResource("3_tsy5h"), ExtResource("4_e2tnc"), ExtResource("5_uwt4o"), ExtResource("6_b2l55"), ExtResource("7_7lwn7")])
+metadata/_custom_type_script = "uid://c5b5kvedlevwy"
