@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ddf5csa45vp5l"]
 
 [ext_resource type="Script" uid="uid://m8vomlrajn15" path="res://vitals/heart_monitor.gd" id="1_wb8a7"]
+[ext_resource type="Script" uid="uid://80n8bl0ga6cr" path="res://vitals/vitals.gd" id="1_ybwv6"]
 [ext_resource type="Script" uid="uid://b4ihnodwuudo7" path="res://vitals/neural_pressure.gd" id="2_tn2t3"]
 [ext_resource type="Script" uid="uid://b3itl8gua5rge" path="res://vitals/system_load.gd" id="3_tn2t3"]
 
@@ -26,6 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ybwv6")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1921523864]
 layout_mode = 1
@@ -80,13 +82,13 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="Pressure_Back" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=394912607]
+[node name="PressureDial" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=394912607]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_wb8a7")
 script = ExtResource("2_tn2t3")
 
-[node name="Load_Back" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=1948245813]
+[node name="LoadDial" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=1948245813]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_tn2t3")
