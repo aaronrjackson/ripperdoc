@@ -4,7 +4,7 @@ extends Control
 @export var spacing := 10.0
 @export var speed := 20.0
 @export var amp := 50.0
-@export var point_count := 50
+@export var point_count := 49
 
 # NEW: toggle between flat line and heartbeat
 @export var is_flat := false
