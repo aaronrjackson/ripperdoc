@@ -248,6 +248,33 @@ func _handle_command(raw: String) -> void:
 			GameManager.dismiss_character()
 			GameManager.next_character()
 			return
+		"wave":
+			if args.size() < 2:
+				output.append("usage: bridge <amp/freq> <num>")
+				return
+			if args[0] == "amp":
+				if GameManager.amp_lock:
+					output.append("Amplitude Locked")
+					return
+				GameManager.bad_wave_amp += args[1].to_int()
+			elif args[0] == "freq":
+				if GameManager.speed_lock:
+					output.append("Frequency Locked")
+					return
+				GameManager.bad_wave_speed += args[1].to_int()
+			else:
+				output.append("usage: bridge <amp/freq> <num>")
+				
+			if ((GameManager.good_wave_amp > GameManager.bad_wave_amp - 5) && (GameManager.good_wave_amp < GameManager.bad_wave_amp + 5)) && !GameManager.amp_lock:
+				output.append("AMPLITUDE LOCK")
+				GameManager.amp_lock = true
+			if (GameManager.good_wave_speed == GameManager.bad_wave_speed)  && !GameManager.speed_lock:
+				output.append("FREQUENCY LOCK")
+				GameManager.speed_lock = true
+			
+			if GameManager.speed_lock && GameManager.amp_lock:
+				output.append("Waves Synced")
+			
 		"virus":
 			if args.is_empty():
 				output.append("usage: virus <scan|quarantine|purge>")

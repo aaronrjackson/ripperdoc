@@ -1,19 +1,18 @@
-@tool
 extends Control
 
 func _ready():
+	if Engine.is_editor_hint():
+		return
 	randomize()
-	amp = randi_range(5, 100)
-	speed = randi_range(5, 50)
+	GameManager.bad_wave_amp = randi_range(5, 100)
+	GameManager.bad_wave_speed = randi_range(5, 50)
 	
 @export var spacing := 10
-var speed : int
-var amp : int
 @export var point_count := 54
 @export var x_offset := 50
 
 enum WaveType { ALPHA, BETA, THETA, DELTA, GAMMA }
-@export var wave_type: WaveType = WaveType.ALPHA
+@export var wave_type: WaveType = WaveType.THETA
 
 @export var is_flat := false
 
@@ -25,6 +24,9 @@ func _physics_process(delta):
 
 func _draw():
 	var points := []
+	if Engine.is_editor_hint():
+		return
+	var speed = GameManager.bad_wave_speed
 	for i in range(point_count):
 		var t = time * speed + i
 		var y = 0.0
@@ -54,6 +56,7 @@ func _draw():
 		draw_polyline(points, _get_wave_color(), 3.0)
 
 func _get_wave_y(t: float) -> float:
+	var amp = GameManager.bad_wave_amp
 	match wave_type:
 		WaveType.ALPHA:
 			# Relaxed wakefulness — smooth, moderate rhythm (8–12 Hz feel)
@@ -85,8 +88,3 @@ func _get_wave_color() -> Color:
 		WaveType.DELTA:  return Color.RED  # orange-red
 		WaveType.GAMMA:  return Color.RED  # amber
 	return Color.WHITE
-
-func set_params(new_spacing := spacing, new_speed := speed, new_amp := amp):
-	spacing = new_spacing
-	speed = new_speed
-	amp = new_amp

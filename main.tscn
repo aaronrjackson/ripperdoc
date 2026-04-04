@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c58txvm7p47cq"]
+[gd_scene format=3 uid="uid://dnkkkvxkan8om"]
 
 [ext_resource type="PackedScene" uid="uid://dffp8stj2gqim" path="res://minigame.tscn" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://c8eq7fjv5gsj1" path="res://patient.tscn" id="2_lquwl"]
