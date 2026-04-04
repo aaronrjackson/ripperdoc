@@ -74,6 +74,7 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ndjm8")
 script = ExtResource("1_wb8a7")
+point_count = 50
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=713821034]
 layout_mode = 2
