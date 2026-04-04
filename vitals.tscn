@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://ddf5csa45vp5l"]
 
+[ext_resource type="Script" uid="uid://m8vomlrajn15" path="res://Heart_Monitor.gd" id="1_wb8a7"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqcys"]
 bg_color = Color(0.29911864, 0.29910892, 0.27660504, 1)
 
@@ -50,6 +52,7 @@ theme_override_constants/margin_bottom = 10
 [node name="Panel" type="Panel" parent="VBoxContainer/Rhythm_Back/Panel" unique_id=1590748175]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_41vlj")
+script = ExtResource("1_wb8a7")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=713821034]
 layout_mode = 2
