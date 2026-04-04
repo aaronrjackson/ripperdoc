@@ -4,17 +4,27 @@ signal character_loaded(character: Character)
 signal character_dismissed
 signal driver_installed(driver_name: String)
 signal virus_uploaded(virus: Virus)
+signal vitals_changed(load: float, pressure: float)
+signal patient_died # when load or pressure == 1.0
+
+var system_load: float = 0.0
+var neural_pressure: float = 0.0
+var pressure_rate: float
 
 var roster: CharacterRoster
 var current_character: Character = null
 var installed_drivers: Array[String] = []
+
 var active_viruses: Array[Virus] = []
 var quarantine_limit: int = 3
+
 
 func _ready() -> void:
 	roster = load("res://data/character_roster.tres")
 	_load_names()
 	call_deferred("next_character")
+
+#region CHARACTER
 
 func _load_names() -> void:
 	var file = FileAccess.open("res://data/names.txt", FileAccess.READ)
@@ -98,6 +108,10 @@ func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 		result.append(pool[i])
 	return result
 
+#endregion
+
+#region DRIVERS
+
 func install_driver(driver_name: String) -> bool:
 	if driver_name in installed_drivers:
 		print("DRIVER ALREADY INSTALLED!")
@@ -114,6 +128,10 @@ func all_drivers_installed() -> bool:
 			if driver.driver_name not in installed_drivers:
 				return false
 	return true
+
+#endregion
+
+#region VIRUS
 
 func _maybe_upload_viruses(character: Character) -> void:
 	for virus_type in character.virus_types:
@@ -151,3 +169,12 @@ func has_virus(type: Virus.Type) -> bool:
 		if v.type == type and not v.quarantined:
 			return true
 	return false
+
+#endregion
+
+#region VITALS
+
+func add_load(amount: float):
+	system_load += amount
+
+#endregion
