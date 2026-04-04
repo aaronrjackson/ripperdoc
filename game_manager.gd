@@ -146,6 +146,9 @@ func install_driver(driver_name: String) -> bool:
 	driver_installed.emit(driver_name)
 	return true
 
+func uninstall_driver(driver_name: String) -> void:
+	installed_drivers.erase(driver_name)
+
 func all_drivers_installed() -> bool:
 	if current_character == null:
 		return false
