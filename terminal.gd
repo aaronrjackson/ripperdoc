@@ -10,8 +10,16 @@ var current_input: String = ""
 const PROMPT: String = "$ "
 
 func _ready() -> void:
+	GameManager.customer_loaded.connect(_on_customer_loaded)
+	
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
+	_redraw()
+
+func _on_customer_loaded(customer: Customer) -> void:
+	print("new customer detected!")
+	output.append(customer.flavor_text)
+	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
 
 func _redraw() -> void:
@@ -52,9 +60,10 @@ func _submit() -> void:
 		command_history.append(trimmed)
 		history_index = -1
 		history_draft = ""
-		var result = _handle_command(trimmed)
-		if result != "":
-			output.append(result)
+		_handle_command(trimmed)
+		#var result = _handle_command(trimmed)
+		#if result != "":
+			#output.append(result)
 	
 	_redraw()
 	
@@ -85,17 +94,52 @@ func _navigate_history(direction: int) -> void:
 	current_input = history_draft if history_index == -1 else command_history[command_history.size() - 1 - history_index]
 	_redraw()
 
-func _handle_command(raw: String) -> String:
+func _handle_command(raw: String) -> void:
 	var parts = raw.split(" ", false)
-	var cmd = parts[0].to_lower()
+	var cmd = parts[0]
 	var args = parts.slice(1)
 	match cmd:
 		"help":
-			return "Available commands: help, echo, clear"
+			output.append("Available commands:\n- help\n- echo\n- clear\n- scan\n- install\n")
+			return
 		"echo":
-			return " ".join(args)
+			output.append(" ".join(args))
+			return
 		"clear":
 			output.clear()
-			return ""
+			return
+		"scan":
+			if GameManager.current_customer == null:
+				output.append("no patient in chair.")
+				return
+			
+			output.append("PATIENT: " + GameManager.current_customer.customer_name)
+			for cyberware in GameManager.current_customer.cyberware:
+				output.append("[" + cyberware.manufacturer + "] " + cyberware.device_name)
+				for driver in cyberware.drivers:
+					var status: String = "MISSING"
+					if driver.driver_name in GameManager.installed_drivers:
+						status = "installed"
+					output.append("- " + driver.driver_name + " [" + status + "]")
+			return
+		"install":
+			if GameManager.current_customer == null:
+				output.append("no patient in chair.")
+				return
+			if args.is_empty():
+				output.append("usage: install <driver>")
+				return
+			var target = args[0]
+			for ware in GameManager.current_customer.cyberware:
+				for drv in ware.drivers:
+					if drv.driver_name == target:
+						if not GameManager.install_driver(target):
+							output.append(target + ": already installed.")
+							return
+						# launch minigame here
+						output.append("loading " + target + "...")
+						return
+			output.append("install: " + target + ": driver not found")
 		_:
-			return "ripperscript: '" + cmd + "' not found"
+			output.append("ripperscript: '" + cmd + "' not found")
+	

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Driver" format=3 uid="uid://b7sy4mhy0ar2t"]
+
+[ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://customer/driver.gd" id="1_nt31o"]
+
+[resource]
+script = ExtResource("1_nt31o")
+driver_name = "neuro_bridge.drv"
+display_name = "Neurobridge Interface"
+metadata/_custom_type_script = "uid://bog7qr32gi2mf"

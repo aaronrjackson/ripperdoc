@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://dnkkkvxkan8om"]
+[gd_scene format=3 uid="uid://c58txvm7p47cq"]
 
-[ext_resource type="PackedScene" path="res://minigame.tscn" id="1_1bvp3"]
-[ext_resource type="PackedScene" path="res://patient.tscn" id="2_lquwl"]
-[ext_resource type="PackedScene" path="res://terminal.tscn" id="3_7mycd"]
+[ext_resource type="PackedScene" uid="uid://dkmj3sepejgmx" path="res://minigame.tscn" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b084ftaik3fmy" path="res://patient.tscn" id="2_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals.tscn" id="4_272bh"]
 
 [node name="main" type="Control" unique_id=1977246374]

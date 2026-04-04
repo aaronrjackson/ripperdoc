@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Customer" format=3 uid="uid://bhte0vtbaf47j"]
+
+[ext_resource type="Script" uid="uid://ci7sucihnrmiu" path="res://customer/cyberware.gd" id="1_mw5pm"]
+[ext_resource type="Script" uid="uid://c5b5kvedlevwy" path="res://customer/customer.gd" id="2_1p8wl"]
+[ext_resource type="Resource" uid="uid://cmpkxxfghcik6" path="res://customer/cyberware/cortex_link_mk2.tres" id="2_wfmcd"]
+
+[resource]
+script = ExtResource("2_1p8wl")
+customer_name = "Testy McTestypants"
+flavor_text = "\"i'm gonna rock yo shit if you don't install my shit b\""
+cyberware = Array[ExtResource("1_mw5pm")]([ExtResource("2_wfmcd")])
+metadata/_custom_type_script = "uid://c5b5kvedlevwy"
