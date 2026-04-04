@@ -87,16 +87,16 @@ func _input(event: InputEvent) -> void:
 		_:
 			if event.unicode > 0:
 				var ch = char(event.unicode)
-				# CORRUPT VIRUS: randomly duplicate or swap
-				if GameManager.has_virus(Virus.Type.CORRUPT) and randf() < 0.2:
+				# CORRUPT VIRUS: randomly duplicate or swap on 10% chance
+				if GameManager.has_virus(Virus.Type.CORRUPT) and randf() < 0.10:
 					var roll = randf()
-					if roll < 0.15 and current_input.length() > 0:
-						# swap with previous character on 15% chance
+					if roll < 0.05 and current_input.length() > 0:
+						# swap with previous character on 50% chance
 						var prev = current_input[cursor_pos - 1]
 						current_input = current_input.left(cursor_pos - 1) + ch + prev + current_input.substr(cursor_pos)
 						cursor_pos += 1
 					else:
-						# duplicate
+						# otherwise duplicate a keypress
 						ch = ch + ch
 						current_input = current_input.left(cursor_pos) + ch + current_input.substr(cursor_pos)
 						cursor_pos += 2
@@ -284,7 +284,7 @@ func _handle_command(raw: String) -> void:
 					output.append("scanning for active processes...")
 					input_locked = true
 					_redraw()
-					await get_tree().create_timer(randf_range(3.0, 5.0)).timeout
+					await get_tree().create_timer(randf_range(1.5, 3.0)).timeout
 					input_locked = false
 					if GameManager.active_viruses.is_empty():
 						output.append("no hostile processes detected.")
