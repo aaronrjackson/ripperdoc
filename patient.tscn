@@ -31,3 +31,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_solxw")
+expand_mode = 2
+stretch_mode = 5
