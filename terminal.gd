@@ -232,7 +232,6 @@ func _handle_command(raw: String) -> void:
 						in_minigame = true
 						while (in_minigame):
 							await get_tree().process_frame
-							print("in loop")
 						output.append(target + ": installed successfully.")
 						minigame.queue_free()
 						_redraw()
