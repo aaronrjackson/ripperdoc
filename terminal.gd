@@ -6,6 +6,7 @@ var command_history: Array[String] = []
 var history_index: int = -1
 var history_draft: String = ""
 var current_input: String = ""
+var cursor_pos: int = 0
 
 const PROMPT: String = "$ "
 
@@ -26,7 +27,9 @@ func _redraw() -> void:
 	output_box.clear()
 	for line in output:
 		output_box.append_text(line + "\n")
-	output_box.append_text(PROMPT + current_input + "█")
+	var before = current_input.left(cursor_pos)
+	var after = current_input.substr(cursor_pos)
+	output_box.append_text(PROMPT + before + "█" + after)
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed:
@@ -38,21 +41,30 @@ func _input(event: InputEvent) -> void:
 		KEY_ENTER, KEY_KP_ENTER:
 			_submit()
 		KEY_BACKSPACE:
-			if current_input.length() > 0:
-				current_input = current_input.left(current_input.length() - 1)
+			if cursor_pos > 0:
+				current_input = current_input.left(cursor_pos - 1) + current_input.substr(cursor_pos)
+				cursor_pos -= 1
 				_redraw()
 		KEY_UP:
 			_navigate_history(1)
 		KEY_DOWN:
 			_navigate_history(-1)
+		KEY_LEFT:
+			cursor_pos = max(0, cursor_pos - 1)
+			_redraw()
+		KEY_RIGHT:
+			cursor_pos = min(current_input.length(), cursor_pos + 1)
+			_redraw()
 		_:
 			if event.unicode > 0:
-				current_input += char(event.unicode)
+				current_input = current_input.left(cursor_pos) + char(event.unicode) + current_input.substr(cursor_pos)
+				cursor_pos += 1
 				_redraw()
 
 func _submit() -> void:
 	var trimmed = current_input.strip_edges()
 	current_input = ""
+	cursor_pos = 0
 	
 	output.append(PROMPT + trimmed)
 	
@@ -61,9 +73,6 @@ func _submit() -> void:
 		history_index = -1
 		history_draft = ""
 		_handle_command(trimmed)
-		#var result = _handle_command(trimmed)
-		#if result != "":
-			#output.append(result)
 	
 	_redraw()
 	
@@ -91,7 +100,7 @@ func _navigate_history(direction: int) -> void:
 	else:
 		# continue scrubbing through history
 		current_input = command_history[command_history.size() - 1 - history_index]
-	current_input = history_draft if history_index == -1 else command_history[command_history.size() - 1 - history_index]
+		cursor_pos = current_input.length() 
 	_redraw()
 
 func _handle_command(raw: String) -> void:
