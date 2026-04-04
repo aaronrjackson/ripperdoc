@@ -5,7 +5,7 @@ signal character_dismissed
 signal driver_installed(driver_name: String)
 signal virus_uploaded(virus: Virus)
 signal vitals_changed(load: float, pressure: float)
-signal patient_died # when load or pressure == 1.0
+signal character_died # when load or pressure == 1.0
 
 var system_load: float = 0.0
 var neural_pressure: float = 0.0
@@ -14,13 +14,14 @@ var pressure_rate: float
 var roster: CharacterRoster
 var current_character: Character = null
 var installed_drivers: Array[String] = []
+var is_dead: bool = false
+
 var bad_wave_speed: int = 0
 var bad_wave_amp: int = 0
 var good_wave_speed: int = 0
 var good_wave_amp: int = 0
 var amp_lock: bool = false
 var speed_lock: bool = false
-
 
 var active_viruses: Array[Virus] = []
 var quarantine_limit: int = 3
@@ -32,16 +33,19 @@ func _ready() -> void:
 	call_deferred("next_character")
 
 func _process(delta: float) -> void:
-	if current_character == null:
+	if current_character == null or is_dead:
 		return
 	neural_pressure += pressure_rate * delta
 	neural_pressure = clamp(neural_pressure, 0.0, 1.0) # snsure always within bounds
 	vitals_changed.emit(system_load, neural_pressure) # update vitals
 	if neural_pressure >= 1.0 or system_load >= 1.0: # kill if too high
-		_kill_patient()
+		_kill_character()
 
-func _kill_patient() -> void:
-	patient_died.emit()
+func _kill_character() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	character_died.emit()
 	dismiss_character()  # clears state
 	# next_character() called by terminal after death sequence plays out
 
@@ -197,23 +201,26 @@ func has_virus(type: Virus.Type) -> bool:
 #region VITALS
 
 func add_load(amount: float) -> void:
+	if is_dead:
+		return
 	system_load = clamp(system_load + amount, 0.0, 1.0) # add
 	vitals_changed.emit(system_load, neural_pressure)
 	if system_load >= 1.0:
-		_kill_patient()
+		_kill_character()
 
 func allocate(amount: float) -> void:
-	# allocating too much kills patient
+	# allocating too much kills character
 	if amount > neural_pressure + 0.3:
-		_kill_patient()
+		_kill_character()
 		return
 	neural_pressure = clamp(neural_pressure - amount, 0.0, 1.0)
 	add_load(amount * 0.6)  # allocating costs system load
 
 func reset_vitals() -> void:
+	is_dead = false
 	system_load = 0.0
 	neural_pressure = 0.0
-	# randomize pressure rate per patient
+	# randomize pressure rate per character
 	pressure_rate = randf_range(0.001, 0.03)
 	# occasionally spike mid-session
 	_schedule_pressure_spike()

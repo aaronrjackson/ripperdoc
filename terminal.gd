@@ -16,6 +16,7 @@ var slow_ready: bool = true
 
 func _ready() -> void:
 	GameManager.character_loaded.connect(_on_character_loaded)
+	GameManager.character_died.connect(_on_character_died)
 	
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
@@ -24,8 +25,18 @@ func _ready() -> void:
 
 func _on_character_loaded(character: Character) -> void:
 	print("new character detected!")
+	output.append("")
 	output.append("new patient seated. run 'scan' to assess.")
 	_redraw()
+
+func _on_character_died():
+	var name = GameManager.current_character.character_name if GameManager.current_character else "patient"
+	output.append(name + " has perished...")
+	input_locked = true
+	_redraw()
+	await get_tree().create_timer(5.0).timeout
+	input_locked = false
+	GameManager.next_character()
 
 func _get_max_lines() -> int:
 	var font = output_box.get_theme_font("normal_font")
@@ -175,19 +186,23 @@ func _handle_command(raw: String) -> void:
 			output.append("- dismiss [--force]")
 			output.append("- virus [scan | quarantine | purge]")
 			return
+			
 		"echo":
 			output.append(" ".join(args))
 			return
+			
 		"clear":
 			if not args.is_empty():
 				output.append("usage: clear")
 				return
 			output.clear()
 			return
+			
 		"scan":
 			if not args.is_empty():
 				output.append("usage: scan")
 				return
+				
 			if GameManager.current_character == null:
 				output.append("no patient in chair.")
 				return
@@ -200,7 +215,9 @@ func _handle_command(raw: String) -> void:
 					if driver.driver_name in GameManager.installed_drivers:
 						status = "installed"
 					output.append("- " + driver.driver_name + " [" + status + "]")
+			output.append("")
 			return
+			
 		"install":
 			if GameManager.current_character == null:
 				output.append("no patient in chair.")
@@ -225,6 +242,7 @@ func _handle_command(raw: String) -> void:
 						return
 			output.append("install: " + target + ": driver not found")
 			return
+			
 		"dismiss":
 			if GameManager.current_character == null:
 				output.append("no patient in chair.")
@@ -248,6 +266,7 @@ func _handle_command(raw: String) -> void:
 			GameManager.dismiss_character()
 			GameManager.next_character()
 			return
+			
 		"wave":
 			if args.size() < 2:
 				output.append("usage: bridge <amp/freq> <num>")
@@ -322,6 +341,7 @@ func _handle_command(raw: String) -> void:
 					# TODO: spike vitals stub
 				_:
 					output.append("virus: unknown subcommand '" + args[0] + "'")
+					
 		"allocate":
 			if args.is_empty():
 				output.append("usage: allocate [amount]")

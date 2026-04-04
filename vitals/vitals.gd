@@ -5,7 +5,7 @@ extends Control
 
 func _ready() -> void:
 	GameManager.vitals_changed.connect(_on_vitals_changed)
-	GameManager.patient_died.connect(_on_patient_died)
+	GameManager.character_died.connect(_on_character_died)
 	GameManager.character_loaded.connect(_on_character_loaded)
 
 func _on_vitals_changed(load: float, pressure: float) -> void:
@@ -14,7 +14,7 @@ func _on_vitals_changed(load: float, pressure: float) -> void:
 	pressure_dial.fill = pressure
 	pressure_dial.queue_redraw()
 
-func _on_patient_died() -> void:
+func _on_character_died() -> void:
 	print("patient is dead!")
 	pass
 	# TODO: flatline animation, lock display, etc.
