@@ -8,7 +8,7 @@ const COLS = 6
 const ROWS = 6
 const POINT_COLS = 7
 const POINT_ROWS = 7
-const ROUNDS_TO_WIN = 3
+const ROUNDS_TO_WIN = 1
 
 var current_round: int = 0
 var start_node: Vector2i
@@ -227,6 +227,10 @@ func _handle_route(args: Array) -> String:
 
 	var head = current_path[-1]
 
+# block routing to any already visited node
+	if target in current_path:
+		return "route: already visited node %d %d" % [col, row]
+
 	if target.x != head.x and target.y != head.y:
 		return "route: must route in a straight line (same row or column)"
 
@@ -279,9 +283,10 @@ func _get_segment_steps(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 func get_tutorial() -> Array[String]:
 	return [
 		"power routing minigame.",
-		"connect the start node to the end node.",
+		"connect the start(cyan) node to the end(cyan) node.",
 		"type 'route [col] [row]' to set waypoints.",
+		"top left node is 1x1, bottom right is 7x7",
 		"type 'route clear' to reset your path.",
-		"complete 3 connections to finish.",
+		"complete 3 circuits to finish.",
 		"start: %dx%d  end: %dx%d" % [start_node.x, start_node.y, end_node.x, end_node.y],
 	]

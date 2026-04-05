@@ -30,6 +30,7 @@ func _on_resume_pressed() -> void:
 
 func _on_restart_pressed() -> void:
 	get_tree().paused = false
+	GameManager.reset()
 	get_tree().change_scene_to_file("res://main.tscn")
 
 func _on_quit_pressed() -> void:

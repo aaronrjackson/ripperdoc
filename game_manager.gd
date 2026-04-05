@@ -97,6 +97,39 @@ func _process(delta: float) -> void:
 		if vfib_timer <= 0.0:
 			_kill_character()
 
+func reset() -> void:
+	current_character = null
+	installed_drivers.clear()
+	driver_to_install.clear()
+	is_dead = false
+	active_viruses.clear()
+	system_load = 0.0
+	neural_pressure = 0.0
+	pressure_rate = 0.0
+	pressure_rate_multiplier = 1.0
+	in_vfib = false
+	vfib_mistakes = 0
+	vfib_correct_pid = -1
+	vfib_processes.clear()
+	vfib_timer = 0.0
+	current_day = 1
+	patients_today = 0
+	deaths_today = 0
+	currency = 0
+	patients_helped = 0
+	patients_killed = 0
+	is_between_days = false
+	shop_purchases.clear()
+	nodes.clear()
+	amp_lock = false
+	speed_lock = false
+	bad_wave_amp = 0
+	bad_wave_speed = 0
+	good_wave_amp = 0
+	good_wave_speed = 0
+	keypress_load_cost = 0.001
+	backspace_load_cost = 0.005
+	quarantine_limit = 3
 
 #region CHARACTER
 

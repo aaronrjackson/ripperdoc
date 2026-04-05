@@ -71,7 +71,7 @@ func _generate_nodes() -> Array:
 				break
 			attempts += 1
 		used_addresses.append(address)
-		var id = "%07d" % randi_range(1000000, 9999999)
+		var id = "%04d" % randi_range(1000, 9999)
 		var days_ago = randi_range(0, 365)
 		var unix = Time.get_unix_time_from_system() - (days_ago * 86400)
 		var date = Time.get_date_dict_from_unix_time(unix)
