@@ -30,13 +30,13 @@ func handle_command(cmd: String, args: Array) -> String:
 			return "usage: wave [amp|freq] [num]"
 
 	var result = ""
-	if not GameManager.amp_lock and abs(GameManager.good_wave_amp - GameManager.bad_wave_amp) < 5:
+	if not GameManager.amp_lock and abs(GameManager.good_wave_amp - GameManager.bad_wave_amp) < 10:
 		result += "AMPLITUDE MATCHES -- LOCKED\n"
 		GameManager.amp_lock = true
-	if not GameManager.speed_lock and GameManager.good_wave_speed == GameManager.bad_wave_speed:
+	if not GameManager.speed_lock and abs(GameManager.good_wave_speed - GameManager.bad_wave_speed) < 5:
 		result += "FREQUENCY MATCHES -- LOCKED\n"
 		GameManager.speed_lock = true
-
+		
 	if GameManager.speed_lock and GameManager.amp_lock:
 		result += "waves successfully synced!"
 		completed.emit()
