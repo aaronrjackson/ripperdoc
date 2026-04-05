@@ -124,7 +124,6 @@ func load_character(character: Character) -> void:
 	current_character = character
 	installed_drivers.clear()
 	reset_vitals()
-	set_pressure_rate_from_drivers(character)
 	character_loaded.emit(character)
 	_maybe_upload_viruses(character)
 	_maybe_trigger_vfib()

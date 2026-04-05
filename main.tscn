@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]
 [ext_resource type="AudioStream" uid="uid://dj818km5mhv3n" path="res://resources/audio/ambience.wav" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://rau5grp6n4ed" path="res://game_over_screen.tscn" id="7_kek77"]
+[ext_resource type="PackedScene" uid="uid://y0h3fnecye60" path="res://pause_menu.tscn" id="8_4c57u"]
 
 [node name="main" type="Control" unique_id=1977246374]
 layout_mode = 3
@@ -53,3 +55,11 @@ size_flags_stretch_ratio = 1.5
 [node name="AmbiencePlayer" type="AudioStreamPlayer" parent="." unique_id=1730167823]
 stream = ExtResource("6_7mycd")
 volume_db = -24.0
+
+[node name="GameOverScreen" parent="." unique_id=1151024541 instance=ExtResource("7_kek77")]
+process_mode = 3
+layout_mode = 1
+
+[node name="PauseMenu" parent="." unique_id=531931981 instance=ExtResource("8_4c57u")]
+process_mode = 3
+layout_mode = 1

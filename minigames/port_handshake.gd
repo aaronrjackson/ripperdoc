@@ -41,16 +41,17 @@ func handle_command(cmd: String, args: Array) -> String:
 				return "usage: ping <address>"
 			return GameManager.handle_ping(args[0])
 		"scp":
-			if args.is_empty():
-				return "usage: scp <id>@<address>"
+			if args.size() < 2:
+				return "usage: scp <id>@<address> <driver>"
 			var parts = args[0].split("@")
 			if parts.size() != 2:
-				return "scp: invalid format. use <id>@<address>"
+				return "scp: invalid format. use <id>@<address> <driver>"
 			var id = parts[0]
 			var address = parts[1]
+			var driver_name = args[1]
 			if GameManager.handle_scp(id, address):
 				completed.emit()
-				return "transfer complete."
+				return "transfer complete: " + driver_name + " retrieved."
 			else:
 				return "scp: connection refused or node not responsive."
 	return ""
