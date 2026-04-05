@@ -319,7 +319,7 @@ func _handle_command(raw: String) -> void:
 			for cyberware in GameManager.current_character.cyberware:
 				for driver in cyberware.drivers:
 					if driver.driver_name == target:
-						if not GameManager.install_driver(target):
+						if GameManager.installed_drivers.has(target):
 							output.append(target + ": already installed.")
 							return
 						# launch minigame here
@@ -339,7 +339,7 @@ func _handle_command(raw: String) -> void:
 							return
 						
 						# otherwise minigame exists
-						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame/Panel/MarginContainer/Panel/MarginContainer/GamePanel")
+						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
 							
 						var minigame: Node = driver.minigame_scene.instantiate()
 						minigame_panel.add_child(minigame)
@@ -356,16 +356,20 @@ func _handle_command(raw: String) -> void:
 						_redraw()
 						while in_minigame:
 							await get_tree().process_frame
-						
-						
-						minigame_commands.clear()
-						output = saved_output.duplicate()
 						if GameManager.installed_drivers.has(current_minigame_driver):
+							minigame_commands.clear()
+							output = saved_output.duplicate()
 							_fade_bodypart(bodypart)
 							output.append(target + ": installed successfully.")
 							minigame.queue_free()
 							return
-						
+						if GameManager.is_dead:
+							_fade_bodypart(bodypart)
+							minigame.queue_free()
+							_redraw()
+							return
+						minigame_commands.clear()
+						output = saved_output.duplicate()
 						_fade_bodypart(bodypart)
 						output.append("^C")
 						output.append("install aborted.")
@@ -425,6 +429,7 @@ func _handle_command(raw: String) -> void:
 			
 			if GameManager.speed_lock && GameManager.amp_lock:
 				output.append("Waves Synced")
+				GameManager.install_driver(current_minigame_driver)
 				in_minigame = false
 			
 		"virus":

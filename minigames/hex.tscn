@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cf8ijcronh1jf"]
+
+[node name="Hex" type="Control" unique_id=697481575]
+layout_mode = 3
+anchors_preset = 0

@@ -12,6 +12,7 @@ signal vfib_resolved
 var roster: CharacterRoster
 var current_character: Character = null
 var installed_drivers: Array[String] = []
+var driver_to_install: Array[Driver] = []
 var is_dead: bool = false
 
 var bad_wave_speed: int = 0
@@ -159,6 +160,7 @@ func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 	var result: Array[Driver] = []
 	for i in count:
 		result.append(pool[i])
+		driver_to_install.append(pool[i])
 	return result
 
 #endregion
