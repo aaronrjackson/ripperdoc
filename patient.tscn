@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b4wphgi7gfcgv" path="res://resources/dummy/eyes.png" id="7_n5pbg"]
 [ext_resource type="AudioStream" uid="uid://mnupp1j1hn3b" path="res://resources/audio/short_glitch.wav" id="10_ufhql"]
 [ext_resource type="AudioStream" uid="uid://dbfjp1bek18qv" path="res://resources/audio/death.wav" id="11_fiuq0"]
+[ext_resource type="AudioStream" uid="uid://crtl1jdgvj888" path="res://resources/audio/flatline.wav" id="12_n5pbg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_solxw"]
 bg_color = Color(0.16862746, 0.14901961, 0.20392157, 1)
@@ -137,3 +138,8 @@ volume_db = -4.0
 
 [node name="DeathPlayer" type="AudioStreamPlayer" parent="." unique_id=1153732087]
 stream = ExtResource("11_fiuq0")
+
+[node name="FlatlinePlayer" type="AudioStreamPlayer" parent="." unique_id=631417338]
+stream = ExtResource("12_n5pbg")
+volume_db = -32.0
+autoplay = true
