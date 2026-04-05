@@ -31,7 +31,7 @@ func _draw():
 		var x = (float(i) / float(p_count - 1)) * w
 		points.append(Vector2(x, h / 2.0 + y))
 	if points.size() > 1:
-		draw_polyline(points, _get_wave_color(), max(1.0, h * 0.03))
+		draw_polyline(points, _get_wave_color(), max(1.0, h * 0.01))
 
 func _get_wave_y(t: float, h: float) -> float:
 	var amp = (GameManager.bad_wave_amp / 100.0) * h * 0.4
