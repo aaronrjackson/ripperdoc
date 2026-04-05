@@ -1,9 +1,22 @@
 [gd_scene format=3 uid="uid://c8eq7fjv5gsj1"]
 
-[ext_resource type="Texture2D" uid="uid://cfli1l0e1vayy" path="res://resources/dummy2.png" id="1_solxw"]
+[ext_resource type="Shader" uid="uid://u28ecg4th7w" path="res://patient.gdshader" id="1_85boj"]
+[ext_resource type="Script" uid="uid://w8ic77h85884" path="res://patient.gd" id="1_h03s5"]
+[ext_resource type="Texture2D" uid="uid://c6s1aseaj1r0m" path="res://resources/dummy/base.png" id="1_solxw"]
+[ext_resource type="Texture2D" uid="uid://bxn7tx0ybpcgw" path="res://resources/dummy/arms.png" id="2_bp7yb"]
+[ext_resource type="Texture2D" uid="uid://dfmtvpty0fktj" path="res://resources/dummy/chest.png" id="3_85boj"]
+[ext_resource type="Texture2D" uid="uid://8iiklgxf08b3" path="res://resources/dummy/head.png" id="4_h03s5"]
+[ext_resource type="Texture2D" uid="uid://d3mf1xrp5ynb1" path="res://resources/dummy/brain.png" id="5_ufhql"]
+[ext_resource type="Texture2D" uid="uid://csgcbom38to8e" path="res://resources/dummy/ears.png" id="6_fiuq0"]
+[ext_resource type="Texture2D" uid="uid://b4wphgi7gfcgv" path="res://resources/dummy/eyes.png" id="7_n5pbg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_solxw"]
-bg_color = Color(0.011764706, 0.99607843, 0.8352941, 1)
+bg_color = Color(0.16862746, 0.14901961, 0.20392157, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h03s5"]
+shader = ExtResource("1_85boj")
+shader_parameter/glitch_intensity = 0.0
+shader_parameter/time_offset = 0.0
 
 [node name="Patient" type="Control" unique_id=196831882]
 custom_minimum_size = Vector2(100, 100)
@@ -13,8 +26,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_h03s5")
 
-[node name="Panel" type="Panel" parent="." unique_id=306635567]
+[node name="Background" type="Panel" parent="." unique_id=306635567]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +37,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_solxw")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=2075277804]
+[node name="Layers" type="Control" parent="." unique_id=2037350244]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Base" type="TextureRect" parent="Layers" unique_id=2075277804]
+material = SubResource("ShaderMaterial_h03s5")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,5 +54,77 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_solxw")
-expand_mode = 2
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Arms" type="TextureRect" parent="Layers" unique_id=282259612]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bp7yb")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Chest" type="TextureRect" parent="Layers" unique_id=264495546]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_85boj")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Head" type="TextureRect" parent="Layers" unique_id=1907888288]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_h03s5")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Brain" type="TextureRect" parent="Layers" unique_id=693926255]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_ufhql")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Ears" type="TextureRect" parent="Layers" unique_id=231937319]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_fiuq0")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Eyes" type="TextureRect" parent="Layers" unique_id=71282541]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_n5pbg")
+expand_mode = 4
 stretch_mode = 5

@@ -13,4 +13,5 @@ script = ExtResource("7_k3g1m")
 device_name = "Titangrip Armature"
 manufacturer = "Xeta Group"
 drivers = Array[ExtResource("1_j30jg")]([ExtResource("2_sxcnj"), ExtResource("3_k5tbc"), ExtResource("4_5glvf"), ExtResource("5_v08qj"), ExtResource("6_xgkr7")])
+bodypart = "Arms"
 metadata/_custom_type_script = "uid://ci7sucihnrmiu"

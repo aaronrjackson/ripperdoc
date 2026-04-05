@@ -13,4 +13,5 @@ script = ExtResource("7_dksnt")
 device_name = "OptiSight XR-9"
 manufacturer = "Helix Optics"
 drivers = Array[ExtResource("1_tuepd")]([ExtResource("2_j4804"), ExtResource("3_44ds4"), ExtResource("4_gh7my"), ExtResource("5_hglv6"), ExtResource("6_rpln8")])
+bodypart = "Eyes"
 metadata/_custom_type_script = "uid://ci7sucihnrmiu"

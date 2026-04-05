@@ -13,4 +13,5 @@ script = ExtResource("7_lrd5m")
 device_name = "Cryoderm Shieldskin"
 manufacturer = "Glacient Biotech"
 drivers = Array[ExtResource("1_0qogp")]([ExtResource("2_tmpdm"), ExtResource("3_484fv"), ExtResource("4_243oy"), ExtResource("5_eoprs"), ExtResource("6_3gb4i")])
+bodypart = "Chest"
 metadata/_custom_type_script = "uid://ci7sucihnrmiu"

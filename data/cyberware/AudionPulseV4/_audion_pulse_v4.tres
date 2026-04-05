@@ -13,4 +13,5 @@ script = ExtResource("7_20pfo")
 device_name = "Audion Pulse V4"
 manufacturer = "Kishiki Audio Labs"
 drivers = Array[ExtResource("1_1ipo1")]([ExtResource("2_pirxi"), ExtResource("3_b8bd1"), ExtResource("4_6mpxj"), ExtResource("5_i71jr"), ExtResource("6_db6ds")])
+bodypart = "Ears"
 metadata/_custom_type_script = "uid://ci7sucihnrmiu"

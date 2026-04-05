@@ -13,4 +13,5 @@ script = ExtResource("2_lplaa")
 device_name = "Synapse Veil S3"
 manufacturer = "Nocturne Systems"
 drivers = Array[ExtResource("1_5455t")]([ExtResource("2_ijy0n"), ExtResource("3_n6oxo"), ExtResource("4_gf76w"), ExtResource("5_c4jwm"), ExtResource("6_aypam")])
+bodypart = "Brain"
 metadata/_custom_type_script = "uid://ci7sucihnrmiu"

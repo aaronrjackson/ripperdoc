@@ -69,7 +69,7 @@ func _ecg(t: float, amp: float) -> float:
 	else:
 		# flat until next beat
 		return 0.0
-
+	
 func _vfib(t: float, amp: float) -> float:
 	var mult = 0.3
 	return (

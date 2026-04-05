@@ -1,5 +1,7 @@
 extends Control
+
 @onready var output_box = $MarginContainer/TextBox
+@onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers")
 
 var output: Array[String] = []  # source of truth for all committed output
 var command_history: Array[String] = []
@@ -37,11 +39,17 @@ func _on_character_loaded(character: Character) -> void:
 	_redraw()
 
 func _on_character_died():
+	# force exit minigame if active
+	if in_minigame:
+		in_minigame = false
+		minigame_commands.clear()
+		output = saved_output.duplicate()
+	
 	var char_name = GameManager.current_character.character_name if GameManager.current_character else "patient"
 	output.append(char_name + " has perished...")
 	input_locked = true
 	_redraw()
-	await get_tree().create_timer(8.0).timeout
+	await get_tree().create_timer(8.0).timeout # wait 8 seconds for new patient
 	input_locked = false
 	GameManager.next_character()
 
@@ -52,6 +60,37 @@ func _on_vfib_started() -> void:
 func _on_vfib_resolved() -> void:
 	output.append("cardiac rhythm restored.")
 	_redraw()
+	
+func _flash_bodypart(part_name: String) -> void:
+	var layer = patient.get_node_or_null(part_name)
+	if layer == null:
+		return
+	layer.visible = true
+	# tween to fade modulate alpha out
+	var tween = create_tween()
+	tween.tween_property(layer, "modulate:a", 0.0, 1.5)
+	tween.tween_callback(func():
+		layer.visible = false
+		layer.modulate.a = 1.0  # reset for next time
+	)
+
+func _set_bodypart_visible(part_name: String, visible: bool) -> void:
+	var layer = patient.get_node_or_null(part_name)
+	if layer == null:
+		return
+	layer.modulate.a = 1.0
+	layer.visible = visible
+
+func _fade_bodypart(part_name: String) -> void:
+	var layer = patient.get_node_or_null(part_name)
+	if layer == null:
+		return
+	var tween = create_tween()
+	tween.tween_property(layer, "modulate:a", 0.0, 1.0)
+	tween.tween_callback(func():
+		layer.visible = false
+		layer.modulate.a = 1.0
+	)
 
 func _get_max_lines() -> int:
 	var font = output_box.get_theme_font("normal_font")
@@ -250,6 +289,12 @@ func _handle_command(raw: String) -> void:
 						status = "installed"
 					output.append("- " + driver.driver_name + " [" + status + "]")
 			output.append("")
+			# flash all bodyparts
+			var seen_parts: Array[String] = []
+			for cyberware in GameManager.current_character.cyberware:
+				if cyberware.bodypart != "" and cyberware.bodypart not in seen_parts:
+					seen_parts.append(cyberware.bodypart)
+					_flash_bodypart(cyberware.bodypart)
 			return
 			
 		"install":
@@ -268,14 +313,22 @@ func _handle_command(raw: String) -> void:
 							return
 						# launch minigame here
 						output.append("installing " + target + "...")
+						var bodypart = cyberware.bodypart 
+						_set_bodypart_visible(bodypart, true)
 						input_locked = true
 						_redraw()
 						await get_tree().create_timer(randf_range(0.5, 1.0)).timeout
 						input_locked = false
 						
-						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
 						if driver.minigame_scene == null:
+							# no minigame found!
+							output.append(target + ": installed successfully.")
+							_fade_bodypart(bodypart)
+							_redraw()
 							return
+						
+						# otherwise minigame exists
+						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
 							
 						var minigame: Node = driver.minigame_scene.instantiate()
 						minigame_panel.add_child(minigame)
@@ -292,12 +345,17 @@ func _handle_command(raw: String) -> void:
 						_redraw()
 						while in_minigame:
 							await get_tree().process_frame
+						
+						
 						minigame_commands.clear()
 						output = saved_output.duplicate()
 						if GameManager.installed_drivers.has(current_minigame_driver):
+							_fade_bodypart(bodypart)
 							output.append(target + ": installed successfully.")
 							minigame.queue_free()
 							return
+						
+						_fade_bodypart(bodypart)
 						output.append("^C")
 						output.append("install aborted.")
 						minigame.queue_free()
@@ -390,7 +448,7 @@ func _handle_command(raw: String) -> void:
 					if not GameManager.quarantine_virus(pid):
 						output.append("error: quarantine slots full. purge existing processes first.")
 					else:
-						output.append("process " + args[1] + " isolated.")
+						output.append("process " + args[1] + " successfully isolated!")
 					_redraw()
 				"purge":
 					if args.size() > 1:
