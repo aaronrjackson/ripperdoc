@@ -40,6 +40,7 @@ size_flags_vertical = 3
 [node name="Minigame" parent="Panel/HBoxContainer/VBoxContainer" unique_id=131380338 instance=ExtResource("1_1bvp3")]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.03
 
 [node name="Patient" parent="Panel/HBoxContainer" unique_id=196831882 instance=ExtResource("2_lquwl")]
 layout_mode = 2

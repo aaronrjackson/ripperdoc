@@ -9,6 +9,8 @@ signal vitals_changed(load: float, pressure: float)
 signal vfib_started
 signal vfib_resolved
 signal day_advanced(new_day: int)
+signal game_over
+signal next_patient_incoming
 
 var roster: CharacterRoster
 var current_character: Character = null
@@ -27,8 +29,11 @@ var active_viruses: Array[Virus] = []
 var quarantine_limit: int = 3
 
 var system_load: float = 0.0
+var keypress_load_cost: float = 0.001
+var backspace_load_cost: float = 0.005
 var neural_pressure: float = 0.0
 var pressure_rate: float
+var pressure_rate_multiplier: float = 1.0 # modified by pressure_dampener purchases
 var in_vfib: bool = false
 var vfib_mistakes: int = 0
 var vfib_correct_pid: int = -1
@@ -39,6 +44,14 @@ var vfib_time_limit: float = 35.0
 var current_day: int = 1
 var patients_today: int = 0
 var patients_per_day: int = 5
+
+var currency: int = 0
+var deaths_today: int = 0
+var patients_helped: int = 0
+var patients_killed: int = 0
+var is_between_days: bool = false
+
+var shop_purchases: Dictionary = {}
 
 var nodes: Array = []
 
@@ -109,6 +122,7 @@ func next_character(delay: float = 8.0) -> void:
 	load_character(_generate_character())
 
 func load_character(character: Character) -> void:
+	is_between_days = false
 	current_character = character
 	installed_drivers.clear()
 	reset_vitals()
@@ -118,10 +132,17 @@ func load_character(character: Character) -> void:
 
 func _on_character_dismissed() -> void:
 	patients_today += 1
+	patients_helped += 1
+
 	if patients_today >= _get_patients_per_day():
 		patients_today = 0
+		deaths_today = 0
+		is_between_days = true
 		current_day += 1
 		day_advanced.emit(current_day)
+	else:
+		next_patient_incoming.emit()
+		next_character()
 
 func _generate_character() -> Character:
 	var c = Character.new()
@@ -178,21 +199,49 @@ func _assign_drivers(cyberware: Array[Cyberware]) -> void:
 		driver_to_install.append(entry.driver)
 		assigned += 1
 
-func dismiss_character() -> void:
+func dismiss_character(emit: bool = true) -> void:
 	current_character = null
 	installed_drivers.clear()
 	system_load = 0.0
 	neural_pressure = 0.0
 	vitals_changed.emit(0.0, 0.0)
-	character_dismissed.emit()
+	if emit:
+		character_dismissed.emit()
+
+func earn_dismiss_currency(force: bool) -> int:
+	var drivers_done = installed_drivers.size()
+	var earned: int
+	if force:
+		# partial credit: 10¥ per completed driver
+		earned = drivers_done * 10
+	else:
+		# full pay: 100¥ base + 50¥ per driver
+		earned = 100 + drivers_done * 50
+	currency += earned
+	return earned
 
 func _kill_character() -> void:
 	if is_dead:
 		return
 	is_dead = true
-	character_died.emit() # emit BEFORE dismiss so terminal can still read the name
-	dismiss_character()
-	next_character(DEATH_SEQUENCE_DURATION)
+	patients_killed += 1
+	deaths_today += 1
+	currency = max(0, currency - 200)
+	character_died.emit()
+	if deaths_today >= 2:
+		game_over.emit()
+		return
+	dismiss_character(false)
+	patients_today += 1
+	if patients_today >= _get_patients_per_day():
+		patients_today = 0
+		deaths_today = 0
+		is_between_days = true
+		current_day += 1
+		day_advanced.emit(current_day)
+	else:
+		next_patient_incoming.emit()
+		next_character(DEATH_SEQUENCE_DURATION)
 
 func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 	var pool = ware.drivers.duplicate()
@@ -207,6 +256,63 @@ func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 
 #endregion
 
+#region SHOP
+
+func get_shop_items() -> Array:
+	return [
+		{
+			"id": "load_reducer",
+			"name": "Load Reducer Patch",
+			"desc": "reduces system load by 15% instantly and lowers per-keypress load cost.",
+			"base_price": 150,
+		},
+		{
+			"id": "pressure_dampener",
+			"name": "Pressure Dampener",
+			"desc": "permanently reduces neural pressure buildup rate by 20%.",
+			"base_price": 200,
+		},
+		{
+			"id": "quarantine_expansion",
+			"name": "Quarantine Expansion",
+			"desc": "adds one additional quarantine slot.",
+			"base_price": 175,
+		},
+	]
+
+func get_item_price(item_id: String) -> int:
+	var base = 0
+	for item in get_shop_items():
+		if item.id == item_id:
+			base = item.base_price
+			break
+	var times_bought = shop_purchases.get(item_id, 0)
+	# each repeat purchase costs 50% more
+	return int(base * pow(1.5, times_bought))
+
+func purchase_item(item_id: String) -> bool:
+	var price = get_item_price(item_id)
+	if currency < price:
+		return false
+	currency -= price
+	shop_purchases[item_id] = shop_purchases.get(item_id, 0) + 1
+	_apply_item(item_id)
+	return true
+
+func _apply_item(item_id: String) -> void:
+	match item_id:
+		"load_reducer":
+			system_load = max(0.0, system_load - 0.15)
+			vitals_changed.emit(system_load, neural_pressure)
+			keypress_load_cost = max(0.0, keypress_load_cost * 0.75)
+			backspace_load_cost = max(0.0, backspace_load_cost * 0.75)
+		"pressure_dampener":
+			pressure_rate_multiplier *= 0.80
+			pressure_rate *= 0.80 # apply immediately to current patient too
+		"quarantine_expansion":
+			quarantine_limit += 1
+
+#endregion
 
 #region DRIVERS
 
@@ -220,6 +326,13 @@ func install_driver(driver_name: String) -> bool:
 
 func uninstall_driver(driver_name: String) -> void:
 	installed_drivers.erase(driver_name)
+	reset_minigame_state()
+
+func reset_minigame_state() -> void:
+	amp_lock = false
+	speed_lock = false
+	bad_wave_amp = 0
+	bad_wave_speed = 0
 
 func all_drivers_installed() -> bool:
 	if current_character == null:
@@ -333,7 +446,7 @@ func reset_vitals() -> void:
 	is_dead = false
 	system_load = 0.0
 	neural_pressure = 0.0
-	pressure_rate = randf_range(0.005, 0.025) # randomize pressure rate per character
+	pressure_rate = randf_range(0.005, 0.025) * pressure_rate_multiplier # randomize pressure rate per character
 	_schedule_pressure_spike()
 
 	# reset vfib

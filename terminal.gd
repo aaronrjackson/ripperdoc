@@ -28,15 +28,20 @@ func _ready() -> void:
 	GameManager.vfib_started.connect(_on_vfib_started)
 	GameManager.vfib_resolved.connect(_on_vfib_resolved)
 	GameManager.day_advanced.connect(_on_day_advanced)
+	GameManager.game_over.connect(_on_game_over)
+	GameManager.next_patient_incoming.connect(_on_next_patient_incoming)
 
+	_print_boot()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_redraw()
+
+func _print_boot() -> void:
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
 	output.append("")
 	_print_day_header(GameManager.current_day)
 	output.append("")
-	await get_tree().process_frame
-	await get_tree().process_frame
-	_redraw()
 
 func _on_character_loaded(character: Character) -> void:
 	print("new character " + character.character_name + " detected!")
@@ -81,9 +86,30 @@ func _print_day_header(day: int) -> void:
 	output.append("================================")
 
 func _on_day_advanced(new_day: int) -> void:
+	output.append("No more patients for today.")
+	output.append("Type 'shop' to browse upgrades or 'clockin' to start the next shift.")
+	_redraw()
+
+func _on_game_over() -> void:
+	var afib = get_tree().root.get_node_or_null("main/Vitals/AfibPlayer")
+	if afib:
+		afib.stop()
+	input_locked = true
 	output.append("")
-	_print_day_header(new_day)
+	output.append("================================")
+	output.append("           GAME OVER")
+	output.append("================================")
 	output.append("")
+	output.append("day reached:       " + str(GameManager.current_day))
+	output.append("patients helped:   " + str(GameManager.patients_helped))
+	output.append("patients lost:     " + str(GameManager.patients_killed))
+	output.append("final balance:     " + str(GameManager.currency) + "$")
+	output.append("")
+	output.append("System shutting down...")
+	_redraw()
+
+func _on_next_patient_incoming() -> void:
+	output.append("Next patient incoming...")
 	_redraw()
 
 
@@ -168,7 +194,7 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.keycode != KEY_ENTER and event.keycode != KEY_KP_ENTER:
-		GameManager.add_load(0.001) # per keypress
+			GameManager.add_load(GameManager.keypress_load_cost)
 
 	# slow virus: ignore inputs while throttled
 	if GameManager.has_virus(Virus.Type.SLOW) and not slow_ready:
@@ -192,7 +218,7 @@ func _input(event: InputEvent) -> void:
 				current_input = current_input.left(cursor_pos - 1) + current_input.substr(cursor_pos)
 				cursor_pos -= 1
 				_redraw()
-			GameManager.add_load(0.005)
+			GameManager.add_load(GameManager.backspace_load_cost)
 		KEY_UP:
 			_navigate_history(1)
 		KEY_DOWN:
@@ -306,6 +332,8 @@ func _handle_command(raw: String) -> void:
 			output.append("- allocate [percentage]")
 			output.append("- diagnose [cardiac]")
 			output.append("- kill [pid]")
+			output.append("- shop [item_id]")
+			output.append("- clockin")
 			output.append("- exit")
 
 		"echo":
@@ -350,18 +378,22 @@ func _handle_command(raw: String) -> void:
 
 		"dismiss":
 			if GameManager.current_character == null:
-				output.append("no patient in chair.")
+				output.append("No patient in chair.")
 				return
 			var force = not args.is_empty() and args[0] == "--force"
 			if not GameManager.all_drivers_installed():
 				if not force:
-					output.append("patient still has missing drivers. run 'scan' to check.")
-					output.append("otherwise, run with --force to forcibly remove patient (NOT RECOMMENDED)")
+					output.append("Patient still has missing drivers! Run 'scan' to check.")
+					output.append("Otherwise, run with '--force' to forcibly remove patient (NOT RECOMMENDED).")
 					return
-			output.append("patient successfully discharged.")
-			output.append("")
+			var earned = GameManager.earn_dismiss_currency(force)
+			if earned > 0:
+				output.append("Patient discharged. +" + str(earned) + "$")
+				output.append("")
+			else:
+				output.append("Patient forcibly discharged. No payment received.")
+				output.append("")
 			GameManager.dismiss_character()
-			GameManager.next_character()
 
 		"virus":
 			if args.is_empty():
@@ -392,7 +424,7 @@ func _handle_command(raw: String) -> void:
 			output.append("conflicting processes:")
 			for p in GameManager.vfib_processes:
 				output.append("  PID %d  %-30s [%s]" % [p["pid"], p["name"], p["desc"]])
-			output.append("run 'kill [pid]' to terminate the offending process.")
+			output.append("Run 'kill [pid]' to terminate the offending process.")
 
 		"kill":
 			if args.is_empty():
@@ -412,6 +444,33 @@ func _handle_command(raw: String) -> void:
 				if GameManager.is_dead:
 					return
 				output.append("WARNING: wrong process. cardiac stability worsening.")
+		
+		"shop":
+			if not GameManager.is_between_days:
+				output.append("shop: only accessible between days.")
+				return
+			if args.is_empty():
+				_cmd_shop_list()
+			elif args[0] == "buy":
+				if args.size() < 2:
+					output.append("usage: shop buy [item_id]")
+					return
+				_cmd_shop_buy(args[1])
+			else:
+				output.append("usage: shop | shop buy [item_id]")
+		
+		"clockin":
+			if not GameManager.is_between_days:
+				output.append("clockin: no shift change pending.")
+				return
+			GameManager.is_between_days = false
+			output.clear()
+			_print_boot()
+			output.append("clocking in. next patient incoming...")
+			output.append("")
+			_redraw()
+			GameManager.next_character()
+		
 		"exit", "quit":
 			if not args.is_empty():
 				output.append("usage: exit")
@@ -441,6 +500,7 @@ func _cmd_install(target: String) -> void:
 			if driver.minigame_scene == null:
 				GameManager.install_driver(driver.driver_name)
 				output.append(target + ": installed successfully.")
+				output.append("")
 				_fade_bodypart(bodypart)
 				_redraw()
 				return
@@ -448,6 +508,7 @@ func _cmd_install(target: String) -> void:
 			# launch minigame
 			var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame/Panel/MarginContainer/Panel/MarginContainer/GamePanel")
 			var minigame: Node = driver.minigame_scene.instantiate()
+			GameManager.reset_minigame_state()
 			minigame_panel.add_child(minigame)
 			current_minigame = minigame
 
@@ -492,6 +553,7 @@ func _cmd_install(target: String) -> void:
 
 			if GameManager.installed_drivers.has(current_minigame_driver):
 				output.append(target + ": installed successfully.")
+				output.append("")
 			else:
 				output.append("^C")
 				output.append("install aborted.")
@@ -545,5 +607,29 @@ func _cmd_virus(args: Array) -> void:
 			GameManager.add_load(0.10)
 		_:
 			output.append("virus: unknown subcommand '" + args[0] + "'")
+
+func _cmd_shop_list() -> void:
+	output.append("NIGHT MARKET -- balance: " + str(GameManager.currency) + "$")
+	output.append("")
+	for item in GameManager.get_shop_items():
+		var price = GameManager.get_item_price(item.id)
+		var times = GameManager.shop_purchases.get(item.id, 0)
+		var bought_str = " (x" + str(times) + " owned)" if times > 0 else ""
+		output.append(item.name + bought_str + "  --  " + str(price) + "$")
+		output.append("  id: " + item.id)
+		output.append("  " + item.desc)
+		output.append("")
+	output.append("use 'shop buy [item_id]' to purchase.")
+
+func _cmd_shop_buy(item_id: String) -> void:
+	var valid = GameManager.get_shop_items().any(func(i): return i.id == item_id)
+	if not valid:
+		output.append("shop: unknown item '" + item_id + "'")
+		return
+	var price = GameManager.get_item_price(item_id)
+	if not GameManager.purchase_item(item_id):
+		output.append("insufficient funds. need " + str(price) + "$, have " + str(GameManager.currency) + "$")
+		return
+	output.append("purchased! balance: " + str(GameManager.currency) + "$")
 
 #endregion
