@@ -6,9 +6,9 @@ var commands: Array[String] = ["wave"]
 
 func get_tutorial() -> Array[String]:
 	return [
-		"sync the incoming wave to the patient's neural frequency.",
-		"wave amp [num]   --  adjust amplitude",
-		"wave freq [num]  --  adjust frequency",
+		"Sync the incoming (red) frequency to the patient's neural (blue) frequency.",
+		"wave amp [num]   --  adjust amplitude (additive)",
+		"wave freq [num]  --  adjust frequency (additive)",
 	]
 
 func handle_command(cmd: String, args: Array) -> String:
