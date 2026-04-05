@@ -285,8 +285,8 @@ func get_tutorial() -> Array[String]:
 		"power routing minigame.",
 		"connect the start(cyan) node to the end(cyan) node.",
 		"type 'route [col] [row]' to set waypoints.",
-		"top left node is 1x1, bottom right is 7x7",
+		"top left node is (1 1), bottom right is (7 7)",
 		"type 'route clear' to reset your path.",
 		"complete 3 circuits to finish.",
-		"start: %dx%d  end: %dx%d" % [start_node.x, start_node.y, end_node.x, end_node.y],
+		"start: %d %d  end: %d %d" % [start_node.x, start_node.y, end_node.x, end_node.y],
 	]
