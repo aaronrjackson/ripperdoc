@@ -7,6 +7,9 @@
 [ext_resource type="FontFile" uid="uid://b7cgby1b6ex2e" path="res://resources/fonts/CONSOLAI.TTF" id="5_icv5u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
+bg_color = Color(0.6526734, 0.7235997, 0.24019825, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvdli"]
 bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
 
 [node name="Terminal" type="Control" unique_id=270556858]
@@ -21,7 +24,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_7d6gb")
 
-[node name="Background" type="Panel" parent="." unique_id=1395345048]
+[node name="Outline" type="Panel" parent="." unique_id=1395345048]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +33,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yrvhh")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=99717323]
+[node name="MarginContainer" type="MarginContainer" parent="Outline" unique_id=1797549585]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,6 +44,22 @@ theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
+
+[node name="Background" type="Panel" parent="Outline/MarginContainer" unique_id=1440418099]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cvdli")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=99717323]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="TextBox" type="RichTextLabel" parent="MarginContainer" unique_id=1864314966]
 layout_mode = 2

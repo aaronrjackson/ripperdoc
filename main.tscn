@@ -26,6 +26,7 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=973832053]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxContainer" unique_id=421180687]
 layout_mode = 2
