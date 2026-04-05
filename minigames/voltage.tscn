@@ -78,15 +78,15 @@ func get_tutorial() -> Array[String]:
 func _build_ui() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	
-	var bg = ColorRect.new()
-	bg.color = Color(0.414, 0.387, 0.466, 1.0)
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
+	#var bg = ColorRect.new()
+	#bg.color = Color(0.414, 0.387, 0.466, 1.0)
+	#bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	#add_child(bg)
 
 	var consola = load(\"res://resources/fonts/CONSOLA.TTF\")
 
 	track_bg = ColorRect.new()
-	track_bg.color = Color(0.071, 0.063, 0.086, 1.0)
+	track_bg.color = Color(0.691, 0.667, 0.74, 1.0)
 	track_bg.set_anchor(SIDE_LEFT, 0.05)
 	track_bg.set_anchor(SIDE_RIGHT, 0.95)
 	track_bg.set_anchor(SIDE_TOP, 0.25)
@@ -104,7 +104,7 @@ func _build_ui() -> void:
 	track_bg.add_child(voltage_cursor)
 
 	hold_bar_bg = ColorRect.new()
-	hold_bar_bg.color = Color(0.071, 0.063, 0.086, 1.0)
+	hold_bar_bg.color = Color(0.691, 0.667, 0.74, 1.0)
 	hold_bar_bg.set_anchor(SIDE_LEFT, 0.05)
 	hold_bar_bg.set_anchor(SIDE_RIGHT, 0.95)
 	hold_bar_bg.set_anchor(SIDE_TOP, 0.52)
