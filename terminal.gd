@@ -333,7 +333,7 @@ func _handle_command(raw: String) -> void:
 
 		"wave":
 			if args.size() < 2:
-				output.append("usage: bridge [amp/freq] [num]")
+				output.append("usage: wave [amp/freq] [num]")
 				return
 			match args[0]:
 				"amp":
@@ -349,7 +349,6 @@ func _handle_command(raw: String) -> void:
 				_:
 					output.append("usage: bridge [amp/freq] [num]")
 					return
-
 			if not GameManager.amp_lock and abs(GameManager.good_wave_amp - GameManager.bad_wave_amp) < 5:
 				output.append("AMPLITUDE LOCK")
 				GameManager.amp_lock = true
@@ -361,7 +360,37 @@ func _handle_command(raw: String) -> void:
 				output.append("Waves Synced")
 				GameManager.install_driver(current_minigame_driver)
 				in_minigame = false
-
+		
+		"ping":
+			if not in_minigame:
+				output.append("ping: no active install process.")
+				return
+			if args.is_empty():
+				output.append("usage: ping <address>")
+				return
+			output.append(GameManager.handle_ping(args[0]))
+			
+		"scp":
+			if not in_minigame:
+				output.append("scp: no active install process.")
+				return
+			if args.size() < 1:
+				output.append("usage: scp <id>@<address>")
+				return
+			var command_parts = args[0].split("@")
+			if command_parts.size() != 2:
+				output.append("scp: invalid format. use <id>@<address>")
+				return
+			var id = command_parts[0]
+			var address = command_parts[1]
+			if GameManager.handle_scp(id, address):
+				output.append("transfer complete.")
+				GameManager.install_driver(current_minigame_driver)
+				in_minigame = false
+			else:
+				output.append("scp: connection refused or node not responsive.")
+			_redraw()
+			
 		"virus":
 			if args.is_empty():
 				output.append("usage: virus [scan|quarantine|purge]")
