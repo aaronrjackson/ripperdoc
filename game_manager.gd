@@ -120,16 +120,16 @@ func _generate_character() -> Character:
 	all_types.shuffle()
 	
 	var virus_roll = randf()
-	if virus_roll < 0.05:  # 5% chance of two viruses
+	if virus_roll < 0.01: # 1% chance of three viruses
 		c.virus_types.append(all_types[0])
 		c.virus_types.append(all_types[1])
 		c.virus_types.append(all_types[2])
-		# TODO: ensure three virsues are different
-	elif virus_roll < 0.3:  # 25% chance of two viruses
+	elif virus_roll < 0.26: # 25% chance of two viruses
 		c.virus_types.append(all_types[0])
 		c.virus_types.append(all_types[1])
-	elif virus_roll < 1.0:  # 70% chance of one virus
+	elif virus_roll < .96: # 70% chance of one virus
 		c.virus_types.append(all_types[0])
+	# 4% chance of no virus
 	
 	print("viruses:")
 	for v in c.virus_types:

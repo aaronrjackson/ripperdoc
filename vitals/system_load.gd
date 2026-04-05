@@ -4,11 +4,29 @@ extends Panel
 @export var fill := 0.3 # 0.0 - 1.0
 @export var epsilon = 0.05 # overlap to close gap
 
+var time: float
+
+func _process(delta: float) -> void:
+	time += delta
+	queue_redraw()
+
 func _draw():
 	var center = size / 2
 	var r = min(size.x, size.y) * 0.5
-	var sweep = fill * ((4 * PI) / 3)
-	var arc_width = r * 1.0  # scales with radius
+	
+	# small noise offset so the bar wobbles slightly
+	var noise = (
+		sin(time * 2.6) * 0.005 +
+		sin(time * 10.3) * 0.006 +
+		sin(time * 26.2) * 0.0027 +
+		sin(time * 37.1) * 0.0016 +
+		sin(time * 82.4 + 1.4) * 0.0019 +
+		randf_range(-0.0017, 0.0017)
+	)
+	var display_fill = clamp(fill + noise, 0.0, 1.0)
+	
+	var sweep = display_fill * ((4 * PI) / 3)
+	var arc_width = r * 1.0
 	
 	# outline
 	draw_circle(center, r, Color("fd0156ff"))
