@@ -88,7 +88,7 @@ func _generate_nodes() -> Array:
 
 func _display_nodes() -> void:
 	lines.clear()
-	lines.append_text("ID        ADDRESS              LAST ACCESSED\n")
-	lines.append_text("---------------------------------------------\n")
+	lines.append_text("ID        ADDRESS          LAST ACCESSED\n")
+	lines.append_text("----------------------------------------\n")
 	for n in GameManager.nodes:
 		lines.append_text("%s  %-20s %s\n" % [n.id, n.address, n.last_accessed])
