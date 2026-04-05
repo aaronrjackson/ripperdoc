@@ -20,6 +20,7 @@ bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
 shader = ExtResource("1_85boj")
 shader_parameter/glitch_intensity = 0.0
 shader_parameter/time_offset = 0.0
+shader_parameter/opacity = 1.0
 
 [node name="Patient" type="Control" unique_id=196831882]
 custom_minimum_size = Vector2(100, 100)
