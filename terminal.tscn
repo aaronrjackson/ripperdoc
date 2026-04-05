@@ -9,15 +9,6 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
 bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
 
-[sub_resource type="GDScript" id="GDScript_cvdli"]
-script/source = "@tool
-extends Node
-
-func _notification(what):
-	if what == NOTIFICATION_READY:
-		print(\"tool node is alive\")
-"
-
 [node name="Terminal" type="Control" unique_id=270556858]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
@@ -50,7 +41,6 @@ theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
-script = SubResource("GDScript_cvdli")
 
 [node name="TextBox" type="RichTextLabel" parent="MarginContainer" unique_id=1864314966]
 layout_mode = 2

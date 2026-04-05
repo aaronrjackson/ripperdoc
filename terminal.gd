@@ -328,7 +328,7 @@ func _handle_command(raw: String) -> void:
 							return
 						
 						# otherwise minigame exists
-						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
+						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame/Panel/MarginContainer/Panel/MarginContainer/GamePanel")
 							
 						var minigame: Node = driver.minigame_scene.instantiate()
 						minigame_panel.add_child(minigame)

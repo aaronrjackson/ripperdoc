@@ -34,10 +34,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="Panel" type="Panel" parent="Panel/MarginContainer" unique_id=1301845884]
 layout_mode = 2
@@ -50,11 +50,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="Panel" type="Panel" parent="Panel/MarginContainer/Panel/MarginContainer" unique_id=852941683]
+[node name="GamePanel" type="Panel" parent="Panel/MarginContainer/Panel/MarginContainer" unique_id=852941683]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k7ghj")

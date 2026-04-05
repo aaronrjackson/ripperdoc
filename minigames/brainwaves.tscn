@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://61mqyi4tr7n6"]
 
 [ext_resource type="Script" uid="uid://b4u5tu5fuc6e6" path="res://minigames/bad_wave.gd" id="1_cujqh"]
-[ext_resource type="Script" uid="uid://c5ahgi46181tl" path="res://minigames/brainwaves.gd" id="1_ijdx2"]
+[ext_resource type="Script" path="res://minigames/brainwaves.gd" id="1_ijdx2"]
 [ext_resource type="Script" uid="uid://gwrbt7enu23x" path="res://minigames/good_wave.gd" id="2_x3khe"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x3khe"]
@@ -17,7 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ijdx2")
 
-[node name="bad_wave" type="Panel" parent="." unique_id=1188995265]
+[node name="BadWave" type="Panel" parent="." unique_id=1188995265]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,10 +26,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_x3khe")
 script = ExtResource("1_cujqh")
-point_count = 53
 wave_type = 0
 
-[node name="good_wave" type="Panel" parent="." unique_id=1245125930]
+[node name="GoodWave" type="Panel" parent="." unique_id=1245125930]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,6 +37,4 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ijdx2")
 script = ExtResource("2_x3khe")
-spacing = 10.0
-point_count = 53
 wave_type = 0
