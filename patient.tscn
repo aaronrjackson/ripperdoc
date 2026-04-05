@@ -13,8 +13,8 @@
 [ext_resource type="AudioStream" uid="uid://dbfjp1bek18qv" path="res://resources/audio/death.wav" id="11_fiuq0"]
 [ext_resource type="AudioStream" uid="uid://crtl1jdgvj888" path="res://resources/audio/flatline.wav" id="12_n5pbg"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_solxw"]
-bg_color = Color(0.16862746, 0.14901961, 0.20392157, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ss30w"]
+bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h03s5"]
 shader = ExtResource("1_85boj")
@@ -31,14 +31,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_h03s5")
 
-[node name="Background" type="Panel" parent="." unique_id=306635567]
+[node name="Panel" type="Panel" parent="." unique_id=1774218611]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_solxw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ss30w")
 
 [node name="Layers" type="Control" parent="." unique_id=2037350244]
 layout_mode = 1

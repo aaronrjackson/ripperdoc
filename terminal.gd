@@ -30,13 +30,14 @@ func _ready() -> void:
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
 	output.append("")
-	await get_tree().process_frame  # wait for layout to compute sizes
+	await get_tree().process_frame
+	await get_tree().process_frame
 	_redraw()
 
 func _on_character_loaded(character: Character) -> void:
 	print("new character " + character.character_name + " detected!")
 	output.append("")
-	output.append("new patient seated. run 'scan' to assess.")
+	output.append("A new patient has been seated. Run 'scan' to assess.")
 	_redraw()
 
 func _on_character_died():
@@ -339,7 +340,7 @@ func _handle_command(raw: String) -> void:
 							return
 						
 						# otherwise minigame exists
-						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame") # adjust path to match your scene
+						var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame/Panel/MarginContainer/Panel/MarginContainer/GamePanel") # adjust path to match your scene
 							
 						var minigame: Node = driver.minigame_scene.instantiate()
 						minigame_panel.add_child(minigame)

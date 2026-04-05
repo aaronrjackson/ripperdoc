@@ -54,7 +54,12 @@ const GUILTY_PROCESSES = [
 func _ready() -> void:
 	roster = load("res://data/character_roster.tres")
 	_load_names()
-	call_deferred("next_character")
+	# wait two frames so all scene nodes are ready before emitting character_loaded
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+func start() -> void:
+	next_character()
 
 func _process(delta: float) -> void:
 	if current_character == null or is_dead:

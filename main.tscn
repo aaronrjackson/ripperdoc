@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://dnkkkvxkan8om"]
 
 [ext_resource type="PackedScene" uid="uid://dffp8stj2gqim" path="res://minigame.tscn" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://dcjtmpi5ntnvc" path="res://main.gd" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://c8eq7fjv5gsj1" path="res://patient.tscn" id="2_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]
+[ext_resource type="AudioStream" uid="uid://dj818km5mhv3n" path="res://resources/audio/ambience.wav" id="6_7mycd"]
 
 [node name="main" type="Control" unique_id=1977246374]
 layout_mode = 3
@@ -12,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_lquwl")
 
 [node name="Panel" type="PanelContainer" parent="." unique_id=1704384430]
 layout_mode = 1
@@ -23,6 +26,7 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=973832053]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/HBoxContainer" unique_id=421180687]
 layout_mode = 2
@@ -44,3 +48,7 @@ size_flags_horizontal = 3
 [node name="Terminal" parent="Panel/HBoxContainer" unique_id=270556858 instance=ExtResource("3_7mycd")]
 layout_mode = 2
 size_flags_stretch_ratio = 1.5
+
+[node name="AmbiencePlayer" type="AudioStreamPlayer" parent="." unique_id=1730167823]
+stream = ExtResource("6_7mycd")
+volume_db = -24.0
