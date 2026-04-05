@@ -42,7 +42,6 @@ func _on_character_loaded(character: Character) -> void:
 	print("new character " + character.character_name + " detected!")
 	# always unlock input when a new patient arrives, even after a death
 	input_locked = false
-	output.append("")
 	output.append("A new patient has been seated. Run 'scan' to assess.")
 	_redraw()
 

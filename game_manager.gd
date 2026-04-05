@@ -138,6 +138,7 @@ func _generate_character() -> Character:
 		cyberware.append(ware)
 	c.cyberware = cyberware
 	_assign_drivers(c.cyberware)
+	c.cyberware = c.cyberware.filter(func(w): return not w.drivers.is_empty()) # remove redundant cyberware
 
 	var all_types = Virus.Type.values()
 	all_types.shuffle()
@@ -180,6 +181,9 @@ func _assign_drivers(cyberware: Array[Cyberware]) -> void:
 func dismiss_character() -> void:
 	current_character = null
 	installed_drivers.clear()
+	system_load = 0.0
+	neural_pressure = 0.0
+	vitals_changed.emit(0.0, 0.0)
 	character_dismissed.emit()
 
 func _kill_character() -> void:
