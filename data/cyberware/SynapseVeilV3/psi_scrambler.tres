@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://dv40oubmcvpvq"]
 
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_cmo04"]
+[ext_resource type="PackedScene" uid="uid://dpqc31rwrbn8q" path="res://minigames/route_power.tscn" id="1_spwvl"]
 
 [resource]
 script = ExtResource("1_cmo04")
 driver_name = "psi_scrambler.drv"
 display_name = "Psi-Signal Scrambler"
+minigame_scene = ExtResource("1_spwvl")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"
