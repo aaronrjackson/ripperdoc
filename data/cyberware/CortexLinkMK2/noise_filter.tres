@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://b1x3tp4jqqd1u"]
 
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_fp1hw"]
+[ext_resource type="PackedScene" uid="uid://cf8ijcronh1jf" path="res://minigames/port_handshake.tscn" id="1_vbqb0"]
 
 [resource]
 script = ExtResource("1_fp1hw")
 driver_name = "noise_filter.drv"
 display_name = "Noise Filter"
+minigame_scene = ExtResource("1_vbqb0")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

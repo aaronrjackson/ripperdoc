@@ -35,6 +35,9 @@ var vfib_processes: Array = [] # list of dicts with pid, name, descriptor
 var vfib_timer: float = 0.0
 var vfib_time_limit: float = 35.0
 
+var nodes: Array = []
+
+
 const INNOCENT_PROCESSES = [
 	{"name": "cardiac_sync.exe", "desc": "stable, nominal load"},
 	{"name": "pulse_monitor.exe", "desc": "stable, nominal load"},
@@ -325,4 +328,24 @@ func vfib_kill(pid: int) -> bool:
 			vfib_timer = max(vfib_timer - 5.0, 5.0)  # lose 5 seconds, min 5 left
 		return false
 
+#endregion
+
+#region MINIGAMES
+
+func handle_ping(address: String) -> String:
+	for n in nodes:
+		if n.address == address:
+			if n.responsive:
+				return address + ": reply received. node is live."
+			else:
+				return address + ": request timed out."
+	return address + ": no route to host."
+
+func handle_scp(id: String, address: String) -> bool:
+	for n in nodes:
+		if n.id == id and n.address == address and n.responsive:
+			return true
+	return false
+	
+	
 #endregion

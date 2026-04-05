@@ -5,6 +5,7 @@
 [ext_resource type="FontFile" uid="uid://ccd6pdycbdeo5" path="res://resources/fonts/CONSOLAB.TTF" id="3_cvdli"]
 [ext_resource type="FontFile" uid="uid://vjvirrgeyf1f" path="res://resources/fonts/CONSOLAZ.TTF" id="4_i03jj"]
 [ext_resource type="FontFile" uid="uid://b7cgby1b6ex2e" path="res://resources/fonts/CONSOLAI.TTF" id="5_icv5u"]
+[ext_resource type="Script" uid="uid://bj8dklhpstf5o" path="res://text_box.gd" id="6_i03jj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
 bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
@@ -58,3 +59,4 @@ theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/mono_font_size = 24
 scroll_active = false
 vertical_alignment = 2
+script = ExtResource("6_i03jj")

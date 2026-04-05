@@ -1,5 +1,60 @@
 [gd_scene format=3 uid="uid://cf8ijcronh1jf"]
 
-[node name="Hex" type="Control" unique_id=697481575]
+[ext_resource type="Script" uid="uid://6372n0mf7ltn" path="res://minigames/port_handshake.gd" id="1_c3k8j"]
+[ext_resource type="FontFile" uid="uid://bbxb3mx8idf0f" path="res://resources/fonts/CONSOLA.TTF" id="1_je3xe"]
+[ext_resource type="FontFile" uid="uid://ccd6pdycbdeo5" path="res://resources/fonts/CONSOLAB.TTF" id="2_enroi"]
+[ext_resource type="FontFile" uid="uid://vjvirrgeyf1f" path="res://resources/fonts/CONSOLAZ.TTF" id="3_c3k8j"]
+[ext_resource type="FontFile" uid="uid://b7cgby1b6ex2e" path="res://resources/fonts/CONSOLAI.TTF" id="4_kprsf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_je3xe"]
+
+[node name="Port_handshake" type="Control" unique_id=697481575]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c3k8j")
+
+[node name="Panel" type="Panel" parent="." unique_id=1546369182]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_je3xe")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=663625605]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 50
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/MarginContainer" unique_id=212684834]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_je3xe")
+theme_override_fonts/bold_font = ExtResource("2_enroi")
+theme_override_fonts/bold_italics_font = ExtResource("3_c3k8j")
+theme_override_fonts/italics_font = ExtResource("4_kprsf")
+theme_override_font_sizes/normal_font_size = 34
+theme_override_font_sizes/bold_font_size = 34
+theme_override_font_sizes/bold_italics_font_size = 34
+theme_override_font_sizes/italics_font_size = 34
+theme_override_font_sizes/mono_font_size = 34
+text = "ID		 Address		Last Accessed
+---------------------------------
+2136723	 jotunheim.sys  12/25
+2136723	 jotunheim.sys  12/25
+2136723	 jotunheim.sys  12/25
+2136723	 jotunheim.sys  12/25
+2136723	 jotunheim.sys  12/25
+"
