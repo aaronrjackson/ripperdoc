@@ -5,12 +5,22 @@
 [ext_resource type="FontFile" uid="uid://ccd6pdycbdeo5" path="res://resources/fonts/CONSOLAB.TTF" id="3_cvdli"]
 [ext_resource type="FontFile" uid="uid://vjvirrgeyf1f" path="res://resources/fonts/CONSOLAZ.TTF" id="4_i03jj"]
 [ext_resource type="FontFile" uid="uid://b7cgby1b6ex2e" path="res://resources/fonts/CONSOLAI.TTF" id="5_icv5u"]
+[ext_resource type="Shader" uid="uid://depowwq0h55g5" path="res://minigames/crt.gdshader" id="6_i03jj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrvhh"]
 bg_color = Color(0.6526734, 0.7235997, 0.24019825, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvdli"]
 bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cvdli"]
+shader = ExtResource("6_i03jj")
+shader_parameter/scanline_intensity = 1.0
+shader_parameter/scanline_count = 10.0
+shader_parameter/vignette_intensity = 0.246000011685
+shader_parameter/flicker_intensity = 0.018
+shader_parameter/noise_intensity = 0.190000009025
+shader_parameter/glow_intensity = 0.2000000095
 
 [node name="Terminal" type="Control" unique_id=270556858]
 custom_minimum_size = Vector2(100, 100)
@@ -79,3 +89,15 @@ scroll_active = false
 vertical_alignment = 2
 
 [node name="VirusPlayer" type="AudioStreamPlayer" parent="." unique_id=1914784492]
+
+[node name="CRTOverlay" type="ColorRect" parent="." unique_id=305005246]
+visible = false
+material = SubResource("ShaderMaterial_cvdli")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
