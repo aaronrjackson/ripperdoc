@@ -1,7 +1,7 @@
 extends Control
 
 @onready var output_box = $MarginContainer/TextBox
-@onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers")
+@onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers") # spaghetti
 @onready var patient_node = get_tree().root.get_node("main/Panel/HBoxContainer/Patient")
 
 var output: Array[String] = []  # source of truth for all committed output
@@ -99,7 +99,7 @@ func _fade_bodypart(part_name: String) -> void:
 func _play_scan_sound() -> void:
 	var sound = patient_node.get_node_or_null("ScanPlayer")
 	if sound == null:
-		print("ERROR: AudioStreamPlayer not found in Patient")
+		print("ERROR: ScanPlayer not found in Patient!!!")
 		return
 	sound.play()
 
