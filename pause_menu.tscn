@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://y0h3fnecye60"]
+
+[ext_resource type="FontFile" uid="uid://b8aj53ugeql0f" path="res://resources/fonts/CYBERPUNK.otf" id="1_hdmo1"]
+[ext_resource type="Script" uid="uid://dgabsrpoka3us" path="res://pause_menu.gd" id="1_nwcfo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_05uyy"]
+bg_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="LabelSettings" id="LabelSettings_05uyy"]
+font = ExtResource("1_hdmo1")
+font_size = 256
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p81d2"]
+bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
+expand_margin_left = 32.0
+expand_margin_top = 32.0
+expand_margin_right = 32.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2nc7s"]
+bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
+expand_margin_left = 32.0
+expand_margin_top = 32.0
+expand_margin_right = 32.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3xb4"]
+bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
+expand_margin_left = 32.0
+expand_margin_top = 32.0
+expand_margin_right = 32.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mxa3g"]
+bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
+expand_margin_left = 32.0
+expand_margin_top = 32.0
+expand_margin_right = 32.0
+expand_margin_bottom = 8.0
+
+[node name="PauseMenu" type="Control" unique_id=531931981]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nwcfo")
+
+[node name="Background" type="Panel" parent="." unique_id=807190225]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_05uyy")
+
+[node name="Title" type="Label" parent="." unique_id=715033098]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+offset_left = -634.0
+offset_top = -97.0
+offset_right = 634.0
+offset_bottom = 188.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "RIPPERDOC"
+label_settings = SubResource("LabelSettings_05uyy")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1542372841]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 492.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 100
+
+[node name="ResumeButton" type="Button" parent="VBoxContainer" unique_id=708777677]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 128
+theme_override_styles/normal = SubResource("StyleBoxFlat_p81d2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2nc7s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_d3xb4")
+text = "Resume"
+
+[node name="RestartButton" type="Button" parent="VBoxContainer" unique_id=203297053]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 128
+theme_override_styles/normal = SubResource("StyleBoxFlat_p81d2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2nc7s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_d3xb4")
+text = "Restart"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=725671528]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 128
+theme_override_styles/normal = SubResource("StyleBoxFlat_p81d2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mxa3g")
+theme_override_styles/hover = SubResource("StyleBoxFlat_d3xb4")
+text = "Quit"

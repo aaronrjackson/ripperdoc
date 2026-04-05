@@ -1,7 +1,8 @@
-[gd_scene format=3 uid="uid://cdunjet3nu5ps"]
+[gd_scene format=3 uid="uid://pli1pvfm2ql0"]
 
 [ext_resource type="FontFile" uid="uid://b8aj53ugeql0f" path="res://resources/fonts/CYBERPUNK.otf" id="1_06t4h"]
 [ext_resource type="Script" uid="uid://bstc8rb87args" path="res://main_menu.gd" id="1_7vrkn"]
+[ext_resource type="Shader" path="res://minigames/crt.gdshader" id="3_fu7sn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vrkn"]
 bg_color = Color(0.19215687, 0.16470589, 0.2784314, 1)
@@ -37,6 +38,18 @@ expand_margin_left = 32.0
 expand_margin_top = 32.0
 expand_margin_right = 32.0
 expand_margin_bottom = 8.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jix8l"]
+shader = ExtResource("3_fu7sn")
+shader_parameter/scanline_intensity = 0.10000000475
+shader_parameter/scanline_count = 120.000005225
+shader_parameter/vignette_intensity = 0.12400000589
+shader_parameter/flicker_intensity = 0.018000000855
+shader_parameter/noise_intensity = 0.0750000035625
+shader_parameter/bar_intensity = 0.0530000025175
+shader_parameter/bar_speed = 0.1590000075525
+shader_parameter/bar_thickness = 0.1310000062225
+shader_parameter/fisheye_strength = 0.3150000149625
 
 [node name="MainMenu" type="Control" unique_id=523424297]
 layout_mode = 3
@@ -107,3 +120,19 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_06t4h")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_glbon")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
 text = "Quit Game"
+
+[node name="CRTOverlay" type="ColorRect" parent="." unique_id=1918547572]
+material = SubResource("ShaderMaterial_jix8l")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -201.0
+offset_top = -114.0
+offset_right = -201.0
+offset_bottom = -114.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.2, 1.2)
+mouse_filter = 2
+color = Color(0, 0, 0, 0)

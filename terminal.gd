@@ -204,7 +204,11 @@ func _input(event: InputEvent) -> void:
 		return
 	if input_locked:
 		return
-
+		
+	# let ESC through for pause menu
+	if event.keycode == KEY_ESCAPE:
+		return
+		
 	if event.keycode != KEY_ENTER and event.keycode != KEY_KP_ENTER:
 			GameManager.add_load(GameManager.keypress_load_cost)
 
@@ -422,8 +426,8 @@ func _handle_command(raw: String) -> void:
 				output.append("allocate: value must be between 0.0 and 1.0")
 				GameManager.add_load(0.05)
 				return
-			GameManager.allocate(amount)
 			output.append("allocated " + args[0] + " neural resources.")
+			GameManager.allocate(amount)
 
 		"diagnose":
 			if args.is_empty() or args[0] != "cardiac":
