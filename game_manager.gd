@@ -41,7 +41,7 @@ var vfib_processes: Array = []
 var vfib_timer: float = 0.0
 var vfib_time_limit: float = 35.0
 
-var current_day: int = 5
+var current_day: int = 1
 var patients_today: int = 0
 var patients_per_day: int = 5
 
