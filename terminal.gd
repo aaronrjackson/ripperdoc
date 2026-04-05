@@ -12,6 +12,7 @@ var current_input: String = ""
 var cursor_pos: int = 0
 var input_locked: bool = false
 var in_minigame: bool = false
+var current_minigame: Node = null
 var minigame_commands: Array[String] = ["wave"]
 var saved_output: Array[String] = []
 var current_minigame_driver: String = ""
@@ -255,12 +256,16 @@ func _handle_command(raw: String) -> void:
 	var cmd = parts[0]
 	var args = parts.slice(1)
 
-	if in_minigame and cmd not in minigame_commands:
-		output.append(cmd + ": not available during install process.")
-		return
-	if not in_minigame and cmd in minigame_commands:
-		output.append(cmd + ": no active install process.")
-		return
+	if in_minigame:
+		if cmd in minigame_commands:
+			var result = current_minigame.handle_command(cmd, args)
+			if result != "":
+				output.append(result)
+			_redraw()
+			return
+		elif cmd not in ["clear", "help", "echo"]:
+			output.append(cmd + ": not available during install process.")
+			return
 
 	match cmd:
 		"help":
@@ -292,7 +297,6 @@ func _handle_command(raw: String) -> void:
 			if GameManager.current_character == null:
 				output.append("no patient in chair.")
 				return
-
 			output.append("PATIENT: " + GameManager.current_character.character_name)
 			for cyberware in GameManager.current_character.cyberware:
 				output.append("[" + cyberware.manufacturer + "] " + cyberware.device_name)
@@ -300,8 +304,6 @@ func _handle_command(raw: String) -> void:
 					var status = "installed" if driver.driver_name in GameManager.installed_drivers else "MISSING"
 					output.append("- " + driver.driver_name + " [" + status + "]")
 			output.append("")
-
-			# flash all unique cyberware bodyparts
 			var seen_parts: Array[String] = []
 			for cyberware in GameManager.current_character.cyberware:
 				if cyberware.bodypart != "" and cyberware.bodypart not in seen_parts:
@@ -327,70 +329,9 @@ func _handle_command(raw: String) -> void:
 					output.append("patient still has missing drivers. run 'scan' to check.")
 					output.append("otherwise, run with --force to forcibly remove patient (NOT RECOMMENDED)")
 					return
-				output.append("you killed them...")
 			GameManager.dismiss_character()
 			GameManager.next_character()
 
-		"wave":
-			if args.size() < 2:
-				output.append("usage: wave [amp/freq] [num]")
-				return
-			match args[0]:
-				"amp":
-					if GameManager.amp_lock:
-						output.append("Amplitude Locked")
-						return
-					GameManager.bad_wave_amp += args[1].to_int()
-				"freq":
-					if GameManager.speed_lock:
-						output.append("Frequency Locked")
-						return
-					GameManager.bad_wave_speed += args[1].to_int()
-				_:
-					output.append("usage: bridge [amp/freq] [num]")
-					return
-			if not GameManager.amp_lock and abs(GameManager.good_wave_amp - GameManager.bad_wave_amp) < 5:
-				output.append("AMPLITUDE LOCK")
-				GameManager.amp_lock = true
-			if not GameManager.speed_lock and GameManager.good_wave_speed == GameManager.bad_wave_speed:
-				output.append("FREQUENCY LOCK")
-				GameManager.speed_lock = true
-
-			if GameManager.speed_lock and GameManager.amp_lock:
-				output.append("Waves Synced")
-				GameManager.install_driver(current_minigame_driver)
-				in_minigame = false
-		
-		"ping":
-			if not in_minigame:
-				output.append("ping: no active install process.")
-				return
-			if args.is_empty():
-				output.append("usage: ping <address>")
-				return
-			output.append(GameManager.handle_ping(args[0]))
-			
-		"scp":
-			if not in_minigame:
-				output.append("scp: no active install process.")
-				return
-			if args.size() < 1:
-				output.append("usage: scp <id>@<address>")
-				return
-			var command_parts = args[0].split("@")
-			if command_parts.size() != 2:
-				output.append("scp: invalid format. use <id>@<address>")
-				return
-			var id = command_parts[0]
-			var address = command_parts[1]
-			if GameManager.handle_scp(id, address):
-				output.append("transfer complete.")
-				GameManager.install_driver(current_minigame_driver)
-				in_minigame = false
-			else:
-				output.append("scp: connection refused or node not responsive.")
-			_redraw()
-			
 		"virus":
 			if args.is_empty():
 				output.append("usage: virus [scan|quarantine|purge]")
@@ -399,7 +340,7 @@ func _handle_command(raw: String) -> void:
 
 		"allocate":
 			if args.is_empty():
-				output.append("usage: allocate [amount]")
+				output.append("usage: allocate [percentage]")
 				return
 			var amount = args[0].to_float()
 			if amount <= 0.0 or amount > 1.0:
@@ -416,7 +357,7 @@ func _handle_command(raw: String) -> void:
 			if not GameManager.in_vfib:
 				output.append("diagnose: no cardiac anomaly detected.")
 				return
-			output.append("WARNING: ventricular fibrillation detected.")
+			output.append("DIAGNOSIS: ventricular fibrillation detected due to conflicting processes.")
 			output.append("conflicting processes:")
 			for p in GameManager.vfib_processes:
 				output.append("  PID %d  %-30s [%s]" % [p["pid"], p["name"], p["desc"]])
@@ -438,9 +379,8 @@ func _handle_command(raw: String) -> void:
 				output.append("process terminated. cardiac rhythm stabilizing...")
 			else:
 				if GameManager.is_dead:
-					return # _kill_character already fired
-				output.append("WARNING: wrong process. cardiac event worsening.")
-				output.append("time remaining critical. one attempt left.")
+					return
+				output.append("WARNING: wrong process. cardiac stability worsening.")
 
 		_:
 			output.append("ripSH: '" + cmd + "' not found")
@@ -464,7 +404,7 @@ func _cmd_install(target: String) -> void:
 			input_locked = false
 
 			if driver.minigame_scene == null:
-				# no minigame; install directly
+				GameManager.install_driver(driver.driver_name)
 				output.append(target + ": installed successfully.")
 				_fade_bodypart(bodypart)
 				_redraw()
@@ -474,11 +414,20 @@ func _cmd_install(target: String) -> void:
 			var minigame_panel = get_tree().root.get_node("main/Panel/HBoxContainer/VBoxContainer/Minigame/Panel/MarginContainer/Panel/MarginContainer/GamePanel")
 			var minigame: Node = driver.minigame_scene.instantiate()
 			minigame_panel.add_child(minigame)
+			current_minigame = minigame
+
+			# connect completion signal
+			minigame.completed.connect(func():
+				GameManager.install_driver(current_minigame_driver)
+				in_minigame = false
+			)
 
 			saved_output = output.duplicate()
 			output.clear()
 			output.append("--- " + target + " ---")
-			output.append("type 'wave <amp/freq> <num>' to sync.")
+			if minigame.has_method("get_tutorial"):
+				for line in minigame.get_tutorial():
+					output.append(line)
 			output.append("ctrl+c to abort.")
 			output.append("")
 			minigame_commands = minigame.commands.duplicate()
@@ -490,6 +439,7 @@ func _cmd_install(target: String) -> void:
 				await get_tree().process_frame
 
 			minigame_commands.clear()
+			current_minigame = null
 			output = saved_output.duplicate()
 			_fade_bodypart(bodypart)
 
@@ -549,7 +499,7 @@ func _cmd_virus(args: Array) -> void:
 				return
 			GameManager.purge_quarantined()
 			output.append("quarantined processes purged.")
-			# TODO: spike vitals stub
+			GameManager.add_load(0.10)
 		_:
 			output.append("virus: unknown subcommand '" + args[0] + "'")
 

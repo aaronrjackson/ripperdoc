@@ -1,5 +1,7 @@
 extends Control
 
+signal completed
+
 var commands: Array[String] = ["ping", "scp"]
 
 const NUMERIC_PREFIXES = [
@@ -9,17 +11,12 @@ const NUMERIC_PREFIXES = [
 	"77.88", "31.13", "52.84", "13.107", "40.112",
 	"8.8", "1.1", "9.9", "94.140", "176.103"
 ]
-
 const NAMED_ADDRESSES = [
-	# norse
 	"jotunheim.sys", "helheim.net", "bifrost.io", "yggdrasil.local",
-	# corporate/cyberpunk
 	"synthcast.corp", "neurovault.net", "blacksite.io", "greybox.local",
 	"deeplink.corp", "ironveil.net", "nullspace.io", "coldwire.local",
-	# generic tech
 	"darknode.sys", "ghostframe.net", "voidpulse.io", "static.local",
 	"deadchannel.sys", "lostpacket.net", "overflow.io", "kernel.local",
-	# creepy/atmospheric
 	"nowhere.sys", "silence.net", "redroom.io", "basement.local",
 	"unmarked.sys", "forgotten.net", "buried.io", "offline.local"
 ]
@@ -30,10 +27,37 @@ func _ready():
 	GameManager.nodes = _generate_nodes()
 	_display_nodes()
 
+func get_tutorial() -> Array[String]:
+	return [
+		"establish a secure connection to retrieve the driver package.",
+		"ping [address]  --  check if a node is live",
+		"scp [id]@[address]  --  pull driver from a live node",
+	]
+
+func handle_command(cmd: String, args: Array) -> String:
+	match cmd:
+		"ping":
+			if args.is_empty():
+				return "usage: ping <address>"
+			return GameManager.handle_ping(args[0])
+		"scp":
+			if args.is_empty():
+				return "usage: scp <id>@<address>"
+			var parts = args[0].split("@")
+			if parts.size() != 2:
+				return "scp: invalid format. use <id>@<address>"
+			var id = parts[0]
+			var address = parts[1]
+			if GameManager.handle_scp(id, address):
+				completed.emit()
+				return "transfer complete."
+			else:
+				return "scp: connection refused or node not responsive."
+	return ""
+
 func _generate_nodes() -> Array:
 	var result = []
 	var used_addresses: Array = []
-
 	while result.size() < 5:
 		var address: String
 		var attempts = 0
@@ -46,7 +70,6 @@ func _generate_nodes() -> Array:
 				break
 			attempts += 1
 		used_addresses.append(address)
-
 		var id = "%07d" % randi_range(1000000, 9999999)
 		var days_ago = randi_range(0, 365)
 		var unix = Time.get_unix_time_from_system() - (days_ago * 86400)
@@ -54,7 +77,6 @@ func _generate_nodes() -> Array:
 		var date_str = "%02d/%02d/%04d" % [date.month, date.day, date.year]
 		var response_chance = lerp(0.9, 0.05, days_ago / 365.0)
 		var responsive = randf() < response_chance
-
 		result.append({
 			"id": id,
 			"address": address,
@@ -62,7 +84,6 @@ func _generate_nodes() -> Array:
 			"days_ago": days_ago,
 			"responsive": responsive
 		})
-
 	return result
 
 func _display_nodes() -> void:
