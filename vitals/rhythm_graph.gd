@@ -1,8 +1,8 @@
 extends Control
 
-@export var speed := 6
+@export var speed := 5
 @export var amp_scale := -1.4
-@export var cycles_visible := 2 # how many heartbeat cycles fit on screen at once
+@export var cycles_visible := 1.7 # how many heartbeat cycles fit on screen at once
 @export var is_flat := false
 @export var is_vfib := false
 const POINT_COUNT := 500  # more points = smoother curve (ish)
