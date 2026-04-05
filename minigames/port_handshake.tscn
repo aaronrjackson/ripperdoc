@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cf8ijcronh1jf"]
+[gd_scene format=3 uid="uid://d37qb4ylhli41"]
 
 [ext_resource type="Script" uid="uid://6372n0mf7ltn" path="res://minigames/port_handshake.gd" id="1_c3k8j"]
 [ext_resource type="FontFile" uid="uid://bbxb3mx8idf0f" path="res://resources/fonts/CONSOLA.TTF" id="1_je3xe"]
