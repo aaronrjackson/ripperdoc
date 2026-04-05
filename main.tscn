@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dnkkkvxkan8om"]
 
 [ext_resource type="PackedScene" uid="uid://dffp8stj2gqim" path="res://minigame.tscn" id="1_1bvp3"]
-[ext_resource type="Script" path="res://main.gd" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://dcjtmpi5ntnvc" path="res://main.gd" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://c8eq7fjv5gsj1" path="res://patient.tscn" id="2_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]

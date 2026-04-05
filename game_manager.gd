@@ -8,6 +8,7 @@ signal virus_uploaded(virus: Virus)
 signal vitals_changed(load: float, pressure: float)
 signal vfib_started
 signal vfib_resolved
+signal day_advanced(new_day: int)
 
 var roster: CharacterRoster
 var current_character: Character = null
@@ -35,6 +36,10 @@ var vfib_processes: Array = [] # list of dicts with pid, name, descriptor
 var vfib_timer: float = 0.0
 var vfib_time_limit: float = 35.0
 
+var current_day: int = 1
+var patients_today: int = 0
+var patients_per_day: int = 5
+
 var nodes: Array = []
 
 
@@ -57,7 +62,7 @@ const DEATH_SEQUENCE_DURATION: float = 8.0
 func _ready() -> void:
 	roster = load("res://data/character_roster.tres")
 	_load_names()
-	# wait two frames so all scene nodes are ready before emitting character_loaded
+	character_dismissed.connect(_on_character_dismissed)
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -111,40 +116,66 @@ func load_character(character: Character) -> void:
 	_maybe_upload_viruses(character)
 	_maybe_trigger_vfib()
 
+func _on_character_dismissed() -> void:
+	patients_today += 1
+	if patients_today >= _get_patients_per_day():
+		patients_today = 0
+		current_day += 1
+		day_advanced.emit(current_day)
+
 func _generate_character() -> Character:
 	var c = Character.new()
 
 	c.character_name = roster.names.pick_random()
 
-	# pick random cyberware (no duplicates)
 	var cyberware_pool = roster.cyberware_pool.duplicate()
 	cyberware_pool.shuffle()
 	var ware_count = randi_range(1, 3)
 	var cyberware: Array[Cyberware] = []
 	for i in ware_count:
 		var ware = cyberware_pool[i].duplicate()
-		ware.drivers = _pick_drivers(ware)
+		# ware.drivers still has the full resource pool here; _assign_drivers reads it then replaces it
 		cyberware.append(ware)
 	c.cyberware = cyberware
+	_assign_drivers(c.cyberware)
 
-	# pick virus count via weighted roll
 	var all_types = Virus.Type.values()
 	all_types.shuffle()
-	var virus_roll = randf()
-	var virus_count: int
-	if virus_roll < 0.01: # 1% chance: three viruses
-		virus_count = 3
-	elif virus_roll < 0.26: # 25% chance: two viruses
-		virus_count = 2
-	elif virus_roll < 0.96: # 70% chance: one virus
-		virus_count = 1
-	else: # 4% chance: no virus
-		virus_count = 0
+	var virus_count = _get_virus_count_for_day()
+	virus_count = min(virus_count, all_types.size())
 	for i in virus_count:
 		c.virus_types.append(all_types[i])
 
-	print("viruses: ", c.virus_types.map(func(v): return Virus.Type.keys()[v]))
+	print("day: ", current_day, " | drivers: ", c.cyberware.reduce(func(acc, w): return acc + w.drivers.size(), 0), " | viruses: ", c.virus_types.map(func(v): return Virus.Type.keys()[v]))
 	return c
+
+func _get_patients_per_day() -> int:
+	# day 1-2: 2 patients. increases by 1 every 2 days, hard cap at 6.
+	if current_day <= 2:
+		return 2
+	return min(2 + (current_day - 2) / 2, 6)
+
+func _assign_drivers(cyberware: Array[Cyberware]) -> void:
+	var total_cap = _get_max_drivers_for_day()
+
+	# build flat pool from the resource-defined drivers before clearing
+	var pool: Array = []
+	for ware in cyberware:
+		for driver in ware.drivers:
+			pool.append({"ware": ware, "driver": driver})
+	pool.shuffle()
+
+	# clear all, then assign up to cap
+	for ware in cyberware:
+		ware.drivers = []
+
+	var assigned = 0
+	for entry in pool:
+		if assigned >= total_cap:
+			break
+		entry.ware.drivers.append(entry.driver)
+		driver_to_install.append(entry.driver)
+		assigned += 1
 
 func dismiss_character() -> void:
 	current_character = null
@@ -155,15 +186,15 @@ func _kill_character() -> void:
 	if is_dead:
 		return
 	is_dead = true
-	character_died.emit()
+	character_died.emit() # emit BEFORE dismiss so terminal can still read the name
 	dismiss_character()
-	# schedule next patient after the death sequence plays out in the terminal
 	next_character(DEATH_SEQUENCE_DURATION)
 
 func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 	var pool = ware.drivers.duplicate()
 	pool.shuffle()
-	var count = min(randi_range(1, 3), pool.size())
+	var max_drivers = _get_max_drivers_for_day()
+	var count = min(randi_range(1, max_drivers), pool.size())
 	var result: Array[Driver] = []
 	for i in count:
 		result.append(pool[i])
@@ -194,6 +225,12 @@ func all_drivers_installed() -> bool:
 			if driver.driver_name not in installed_drivers:
 				return false
 	return true
+
+func _get_max_drivers_for_day() -> int:
+	# Day 1: exactly 1 driver. Increases by 1 every 2 days after that, hard cap at 5.
+	if current_day == 1:
+		return 1
+	return min(1 + (current_day - 1) / 2, 5)
 
 #endregion
 
@@ -236,6 +273,36 @@ func has_virus(type: Virus.Type) -> bool:
 		if v.type == type and not v.quarantined:
 			return true
 	return false
+
+func _get_virus_count_for_day() -> int:
+	var roll = randf()
+	match current_day:
+		1:
+			return 0
+		2:
+			if roll < 0.50:
+				return 0
+			else:
+				return 1
+		3, 4:
+			if roll < 0.15:
+				return 0
+			elif roll < 0.85:
+				return 1
+			else:
+				return 2
+		_:
+			var extra = min(current_day - 5, 5)
+			var two_threshold = 0.40 + extra * 0.05
+			var three_threshold = two_threshold + 0.10 + extra * 0.02
+			if roll < 0.10:
+				return 0
+			elif roll < two_threshold:
+				return 1
+			elif roll < three_threshold:
+				return 2
+			else:
+				return 3
 
 #endregion
 

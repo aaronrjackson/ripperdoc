@@ -27,9 +27,12 @@ func _ready() -> void:
 	GameManager.character_died.connect(_on_character_died)
 	GameManager.vfib_started.connect(_on_vfib_started)
 	GameManager.vfib_resolved.connect(_on_vfib_resolved)
+	GameManager.day_advanced.connect(_on_day_advanced)
 
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
+	output.append("")
+	_print_day_header(GameManager.current_day)
 	output.append("")
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -44,16 +47,15 @@ func _on_character_loaded(character: Character) -> void:
 	_redraw()
 
 func _on_character_died() -> void:
+	var char_name = GameManager.current_character.character_name if GameManager.current_character else "patient"
+
 	if in_minigame:
 		in_minigame = false
 		minigame_commands.clear()
 		output = saved_output.duplicate()
 
-	var char_name = GameManager.current_character.character_name if GameManager.current_character else "patient"
 	output.append(char_name + " has perished...")
-	input_locked = true
 	_redraw()
-	# game_manager handles scheduling the next character; terminal just locks until character_loaded fires
 
 func _on_vfib_started() -> void:
 	output.append("WARNING: cardiac anomaly detected. run 'diagnose cardiac' immediately.")
@@ -61,6 +63,17 @@ func _on_vfib_started() -> void:
 
 func _on_vfib_resolved() -> void:
 	output.append("cardiac rhythm restored.")
+	_redraw()
+
+func _print_day_header(day: int) -> void:
+	output.append("================================")
+	output.append("       DAY " + str(day) + " SHIFT STARTING")
+	output.append("================================")
+
+func _on_day_advanced(new_day: int) -> void:
+	output.append("")
+	_print_day_header(new_day)
+	output.append("")
 	_redraw()
 
 
@@ -303,6 +316,8 @@ func _handle_command(raw: String) -> void:
 				return
 			output.append("PATIENT: " + GameManager.current_character.character_name)
 			for cyberware in GameManager.current_character.cyberware:
+				if cyberware.drivers.is_empty():
+					continue
 				output.append("[" + cyberware.manufacturer + "] " + cyberware.device_name)
 				for driver in cyberware.drivers:
 					var status = "installed" if driver.driver_name in GameManager.installed_drivers else "MISSING"
@@ -333,6 +348,7 @@ func _handle_command(raw: String) -> void:
 					output.append("patient still has missing drivers. run 'scan' to check.")
 					output.append("otherwise, run with --force to forcibly remove patient (NOT RECOMMENDED)")
 					return
+			output.append("patient successfully discharged.")
 			GameManager.dismiss_character()
 			GameManager.next_character()
 
@@ -452,13 +468,17 @@ func _cmd_install(target: String) -> void:
 
 			minigame_commands.clear()
 			current_minigame = null
-			output = saved_output.duplicate()
 			_fade_bodypart(bodypart)
 
 			if GameManager.is_dead:
+				# _on_character_died already restored saved_output and appended the death message
+				# do NOT overwrite output here
 				minigame.queue_free()
 				_redraw()
 				return
+
+			output = saved_output.duplicate()
+
 			if GameManager.installed_drivers.has(current_minigame_driver):
 				output.append(target + ": installed successfully.")
 			else:
