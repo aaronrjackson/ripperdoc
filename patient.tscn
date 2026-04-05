@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://d3mf1xrp5ynb1" path="res://resources/dummy/brain.png" id="5_ufhql"]
 [ext_resource type="Texture2D" uid="uid://csgcbom38to8e" path="res://resources/dummy/ears.png" id="6_fiuq0"]
 [ext_resource type="Texture2D" uid="uid://b4wphgi7gfcgv" path="res://resources/dummy/eyes.png" id="7_n5pbg"]
+[ext_resource type="AudioStream" uid="uid://mnupp1j1hn3b" path="res://resources/audio/short_glitch.wav" id="10_ufhql"]
+[ext_resource type="AudioStream" uid="uid://dbfjp1bek18qv" path="res://resources/audio/death.wav" id="11_fiuq0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_solxw"]
 bg_color = Color(0.16862746, 0.14901961, 0.20392157, 1)
@@ -128,3 +130,10 @@ grow_vertical = 2
 texture = ExtResource("7_n5pbg")
 expand_mode = 4
 stretch_mode = 5
+
+[node name="ScanPlayer" type="AudioStreamPlayer" parent="." unique_id=311090231]
+stream = ExtResource("10_ufhql")
+volume_db = -4.0
+
+[node name="DeathPlayer" type="AudioStreamPlayer" parent="." unique_id=1153732087]
+stream = ExtResource("11_fiuq0")

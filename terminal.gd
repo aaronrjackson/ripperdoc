@@ -1,7 +1,8 @@
 extends Control
 
 @onready var output_box = $MarginContainer/TextBox
-@onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers")
+@onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers") # spaghetti
+@onready var patient_node = get_tree().root.get_node("main/Panel/HBoxContainer/Patient")
 
 var output: Array[String] = []  # source of truth for all committed output
 var command_history: Array[String] = []
@@ -66,9 +67,10 @@ func _flash_bodypart(part_name: String) -> void:
 	if layer == null:
 		return
 	layer.visible = true
+	_play_scan_sound()
 	# tween to fade modulate alpha out
 	var tween = create_tween()
-	tween.tween_property(layer, "modulate:a", 0.0, 1.5)
+	tween.tween_property(layer, "modulate:a", 0.0, .9)
 	tween.tween_callback(func():
 		layer.visible = false
 		layer.modulate.a = 1.0  # reset for next time
@@ -78,6 +80,8 @@ func _set_bodypart_visible(part_name: String, visible: bool) -> void:
 	var layer = patient.get_node_or_null(part_name)
 	if layer == null:
 		return
+	if visible:
+		_play_scan_sound()
 	layer.modulate.a = 1.0
 	layer.visible = visible
 
@@ -91,6 +95,13 @@ func _fade_bodypart(part_name: String) -> void:
 		layer.visible = false
 		layer.modulate.a = 1.0
 	)
+
+func _play_scan_sound() -> void:
+	var sound = patient_node.get_node_or_null("ScanPlayer")
+	if sound == null:
+		print("ERROR: ScanPlayer not found in Patient!!!")
+		return
+	sound.play()
 
 func _get_max_lines() -> int:
 	var font = output_box.get_theme_font("normal_font")
