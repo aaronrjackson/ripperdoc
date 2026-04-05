@@ -142,4 +142,3 @@ stream = ExtResource("11_fiuq0")
 [node name="FlatlinePlayer" type="AudioStreamPlayer" parent="." unique_id=631417338]
 stream = ExtResource("12_n5pbg")
 volume_db = -32.0
-autoplay = true

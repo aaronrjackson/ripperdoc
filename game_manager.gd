@@ -2,7 +2,7 @@ extends Node
 
 signal character_loaded(character: Character)
 signal character_dismissed
-signal character_died # when load or pressure == 1.0
+signal character_died
 signal driver_installed(driver_name: String)
 signal virus_uploaded(virus: Virus)
 signal vitals_changed(load: float, pressure: float)
@@ -48,6 +48,9 @@ const GUILTY_PROCESSES = [
 	{"name": "signal_inject.exe", "desc": "elevated load, unexpected activity"},
 ]
 
+# duration the terminal death sequence plays before a new patient is loaded
+const DEATH_SEQUENCE_DURATION: float = 8.0
+
 func _ready() -> void:
 	roster = load("res://data/character_roster.tres")
 	_load_names()
@@ -56,18 +59,20 @@ func _ready() -> void:
 	await get_tree().process_frame
 
 func start() -> void:
-	next_character()
+	next_character(0.0)
 
 func _process(delta: float) -> void:
 	if current_character == null or is_dead:
 		return
+
 	neural_pressure += pressure_rate * delta
-	neural_pressure = clamp(neural_pressure, 0.0, 1.0) # snsure always within bounds
-	vitals_changed.emit(system_load, neural_pressure) # update vitals
-	if neural_pressure >= 1.0 or system_load >= 1.0: # kill if too high
+	neural_pressure = clamp(neural_pressure, 0.0, 1.0) # ensure always within bounds
+	vitals_changed.emit(system_load, neural_pressure)
+
+	if neural_pressure >= 1.0 or system_load >= 1.0:
 		_kill_character()
-	
-	# handle vfib countdown
+		return
+
 	if in_vfib:
 		vfib_timer -= delta
 		if vfib_timer <= 0.0:
@@ -89,9 +94,10 @@ func _load_names() -> void:
 	file.close()
 	print("loaded ", roster.names.size(), " names")
 
-func next_character() -> void:
+func next_character(delay: float = 8.0) -> void:
 	if roster == null:
 		return
+	await get_tree().create_timer(delay).timeout
 	load_character(_generate_character())
 
 func load_character(character: Character) -> void:
@@ -99,49 +105,42 @@ func load_character(character: Character) -> void:
 	installed_drivers.clear()
 	reset_vitals()
 	character_loaded.emit(character)
-	_maybe_upload_viruses(character) # starts random virus upload timer
-	_maybe_trigger_vfib() # starts random vfib start timer
-	
+	_maybe_upload_viruses(character)
+	_maybe_trigger_vfib()
+
 func _generate_character() -> Character:
 	var c = Character.new()
-	
-	# pick random name
+
 	c.character_name = roster.names.pick_random()
-	
+
 	# pick random cyberware (no duplicates)
 	var cyberware_pool = roster.cyberware_pool.duplicate()
 	cyberware_pool.shuffle()
-	var ware_count = randi_range(1, 3) # choose 1-3 random cyberware
-
+	var ware_count = randi_range(1, 3)
 	var cyberware: Array[Cyberware] = []
 	for i in ware_count:
 		var ware = cyberware_pool[i].duplicate()
 		ware.drivers = _pick_drivers(ware)
 		cyberware.append(ware)
 	c.cyberware = cyberware
-	
-	# pick random virus
+
+	# pick virus count via weighted roll
 	var all_types = Virus.Type.values()
 	all_types.shuffle()
 	var virus_roll = randf()
-	if virus_roll < 0.01: # 1% chance of three viruses
-		c.virus_types.append(all_types[0])
-		c.virus_types.append(all_types[1])
-		c.virus_types.append(all_types[2])
-	elif virus_roll < 0.26: # 25% chance of two viruses
-		c.virus_types.append(all_types[0])
-		c.virus_types.append(all_types[1])
-	elif virus_roll < .96: # 70% chance of one virus
-		c.virus_types.append(all_types[0])
-	elif virus_roll < 1.0: # 4% chance of no virus
-		pass
-	
-	print("viruses:")
-	for v in c.virus_types:
-		match v:
-			Virus.Type.SLOW: print("SLOW")
-			Virus.Type.CORRUPT: print("CORRUPT")
-			Virus.Type.AMNESIA: print("AMNESIA")
+	var virus_count: int
+	if virus_roll < 0.01: # 1% chance: three viruses
+		virus_count = 3
+	elif virus_roll < 0.26: # 25% chance: two viruses
+		virus_count = 2
+	elif virus_roll < 0.96: # 70% chance: one virus
+		virus_count = 1
+	else: # 4% chance: no virus
+		virus_count = 0
+	for i in virus_count:
+		c.virus_types.append(all_types[i])
+
+	print("viruses: ", c.virus_types.map(func(v): return Virus.Type.keys()[v]))
 	return c
 
 func dismiss_character() -> void:
@@ -154,14 +153,14 @@ func _kill_character() -> void:
 		return
 	is_dead = true
 	character_died.emit()
-	dismiss_character()  # clears state
-	# next_character() called by terminal after death sequence plays out
-	
+	dismiss_character()
+	# schedule next patient after the death sequence plays out in the terminal
+	next_character(DEATH_SEQUENCE_DURATION)
+
 func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 	var pool = ware.drivers.duplicate()
 	pool.shuffle()
-	var count = randi_range(1, 3)
-	count = min(count, pool.size())
+	var count = min(randi_range(1, 3), pool.size())
 	var result: Array[Driver] = []
 	for i in count:
 		result.append(pool[i])
@@ -169,6 +168,7 @@ func _pick_drivers(ware: Cyberware) -> Array[Driver]:
 	return result
 
 #endregion
+
 
 #region DRIVERS
 
@@ -194,14 +194,15 @@ func all_drivers_installed() -> bool:
 
 #endregion
 
+
 #region VIRUS
 
 func _maybe_upload_viruses(character: Character) -> void:
 	for virus_type in character.virus_types:
-		var delay = randf_range(10.0, 30.0)  # upload on a random timer mid-session
+		var delay = randf_range(10.0, 30.0) # upload on a random timer mid-session
 		await get_tree().create_timer(delay).timeout
 		if current_character != character:
-			return  # character was dismissed before virus fired
+			return # character was dismissed before virus fired
 		var v = Virus.create(virus_type)
 		active_viruses.append(v)
 		virus_uploaded.emit(v)
@@ -215,7 +216,7 @@ func valid_virus(pid: int) -> bool:
 
 func quarantine_virus(pid: int) -> bool:
 	if active_viruses.filter(func(v): return v.quarantined).size() >= quarantine_limit:
-		return false  # no slots
+		return false # no slots
 	for v in active_viruses:
 		if v.pid == pid:
 			v.quarantined = true
@@ -235,12 +236,13 @@ func has_virus(type: Virus.Type) -> bool:
 
 #endregion
 
+
 #region VITALS
 
 func add_load(amount: float) -> void:
 	if is_dead:
 		return
-	system_load = clamp(system_load + amount, 0.0, 1.0) # add
+	system_load = clamp(system_load + amount, 0.0, 1.0)
 	vitals_changed.emit(system_load, neural_pressure)
 	if system_load >= 1.0:
 		_kill_character()
@@ -251,18 +253,15 @@ func allocate(amount: float) -> void:
 		_kill_character()
 		return
 	neural_pressure = clamp(neural_pressure - amount, 0.0, 1.0)
-	add_load(amount * 0.6)  # allocating costs system load
+	add_load(amount * 0.6) # allocating costs system load
 
 func reset_vitals() -> void:
-	
 	is_dead = false
 	system_load = 0.0
 	neural_pressure = 0.0
-	# randomize pressure rate per character
-	pressure_rate = randf_range(0.005, 0.025)
-	# occasionally spike mid-session
+	pressure_rate = randf_range(0.005, 0.025) # randomize pressure rate per character
 	_schedule_pressure_spike()
-	
+
 	# reset vfib
 	in_vfib = false
 	vfib_mistakes = 0
@@ -270,64 +269,58 @@ func reset_vitals() -> void:
 	vfib_processes.clear()
 
 func spike_pressure_rate(spiked_rate: float, duration: float) -> void:
-	var og_pressure_rate = pressure_rate # save the original pressure rate
+	var og_pressure_rate = pressure_rate # save original pressure rate
 	pressure_rate = spiked_rate
 	await get_tree().create_timer(duration).timeout
-	pressure_rate = og_pressure_rate  # back to base
+	pressure_rate = og_pressure_rate # restore base rate
 
 func _schedule_pressure_spike() -> void:
-	await get_tree().create_timer(randf_range(5.0, 20.0)).timeout # random time until spike
+	await get_tree().create_timer(randf_range(5.0, 20.0)).timeout
 	if current_character == null:
 		return
 	spike_pressure_rate(randf_range(0.04, 0.06), randf_range(1.5, 4.0))
 
 func _maybe_trigger_vfib() -> void:
-	# called only from load_character, fires randomly mid session
+	# fires randomly mid-session; called only from load_character
 	await get_tree().create_timer(randf_range(30.0, 90.0)).timeout
 	if current_character == null or is_dead:
 		return
-	if randf() < 0.2: # 20% chance after the delay - overall rare
+	if randf() < 0.2: # 20% chance after delay - overall rare
 		_start_vfib()
 
 func _start_vfib() -> void:
 	in_vfib = true
 	vfib_mistakes = 0
 	vfib_timer = vfib_time_limit
-	
-	# pick random processes
+
 	vfib_processes.clear()
 	var innocents = INNOCENT_PROCESSES.duplicate()
 	innocents.shuffle()
 	var guilty = GUILTY_PROCESSES.pick_random().duplicate()
 	guilty["pid"] = randi_range(1000, 99999)
 	vfib_correct_pid = guilty["pid"]
-	
+
 	vfib_processes.append(guilty)
 	for i in 2: # 2 innocent processes
 		var p = innocents[i].duplicate()
 		p["pid"] = randi_range(1000, 99999)
 		vfib_processes.append(p)
 	vfib_processes.shuffle() # TODO: actually sort by pid in increasing order
-	
-	# TODO: possible for two or mmore processes (or viruses) to have the same pid needs fix
-	
+	# TODO: possible for two or more processes (or viruses) to have the same pid - needs fix
+
 	vfib_started.emit()
 
-# returns true if correct
 func vfib_kill(pid: int) -> bool:
 	if pid == vfib_correct_pid:
-		# success
 		in_vfib = false
 		vfib_processes.clear()
 		vfib_resolved.emit()
 		return true
+	vfib_mistakes += 1
+	if vfib_mistakes >= 2:
+		_kill_character()
 	else:
-		# failure
-		vfib_mistakes += 1
-		if vfib_mistakes >= 2:
-			_kill_character()
-		else:
-			vfib_timer = max(vfib_timer - 5.0, 5.0)  # lose 5 seconds, min 5 left
-		return false
+		vfib_timer = max(vfib_timer - 5.0, 5.0) # lose 5 seconds, min 5 left
+	return false
 
 #endregion
