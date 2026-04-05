@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]
 [ext_resource type="AudioStream" uid="uid://dj818km5mhv3n" path="res://resources/audio/ambience.wav" id="6_7mycd"]
 [ext_resource type="Shader" uid="uid://depowwq0h55g5" path="res://minigames/crt.gdshader" id="7_272bh"]
-[ext_resource type="PackedScene" path="res://game_over_screen.tscn" id="7_kek77"]
-[ext_resource type="PackedScene" path="res://pause_menu.tscn" id="8_4c57u"]
+[ext_resource type="PackedScene" uid="uid://rau5grp6n4ed" path="res://game_over_screen.tscn" id="7_kek77"]
+[ext_resource type="PackedScene" uid="uid://y0h3fnecye60" path="res://pause_menu.tscn" id="8_4c57u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5vw27"]
 shader = ExtResource("7_272bh")
