@@ -319,7 +319,7 @@ func _handle_command(raw: String) -> void:
 
 	if in_minigame:
 		if cmd in minigame_commands:
-			var result = current_minigame.handle_command(cmd, args)
+			var result = await current_minigame.handle_command(cmd, args)
 			if result != "":
 				output.append(result)
 			_redraw()

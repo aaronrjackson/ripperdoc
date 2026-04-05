@@ -37,7 +37,7 @@ var pressure_rate_multiplier: float = 1.0 # modified by pressure_dampener purcha
 var in_vfib: bool = false
 var vfib_mistakes: int = 0
 var vfib_correct_pid: int = -1
-var vfib_processes: Array = [] # list of dicts with pid, name, descriptor
+var vfib_processes: Array = []
 var vfib_timer: float = 0.0
 var vfib_time_limit: float = 35.0
 
@@ -55,7 +55,6 @@ var shop_purchases: Dictionary = {}
 
 var nodes: Array = []
 
-
 const INNOCENT_PROCESSES = [
 	{"name": "cardiac_sync.exe", "desc": "stable, nominal load"},
 	{"name": "pulse_monitor.exe", "desc": "stable, nominal load"},
@@ -69,7 +68,6 @@ const GUILTY_PROCESSES = [
 	{"name": "signal_inject.exe", "desc": "elevated load, unexpected activity"},
 ]
 
-# duration the terminal death sequence plays before a new patient is loaded
 const DEATH_SEQUENCE_DURATION: float = 8.0
 
 func _ready() -> void:
@@ -87,7 +85,7 @@ func _process(delta: float) -> void:
 		return
 
 	neural_pressure += pressure_rate * delta
-	neural_pressure = clamp(neural_pressure, 0.0, 1.0) # ensure always within bounds
+	neural_pressure = clamp(neural_pressure, 0.0, 1.0)
 	vitals_changed.emit(system_load, neural_pressure)
 
 	if neural_pressure >= 1.0 or system_load >= 1.0:
@@ -126,6 +124,7 @@ func load_character(character: Character) -> void:
 	current_character = character
 	installed_drivers.clear()
 	reset_vitals()
+	set_pressure_rate_from_drivers(character)
 	character_loaded.emit(character)
 	_maybe_upload_viruses(character)
 	_maybe_trigger_vfib()
@@ -145,6 +144,7 @@ func _on_character_dismissed() -> void:
 		next_character()
 
 func _generate_character() -> Character:
+	driver_to_install.clear()
 	var c = Character.new()
 
 	c.character_name = roster.names.pick_random()
@@ -356,10 +356,10 @@ func _get_max_drivers_for_day() -> int:
 
 func _maybe_upload_viruses(character: Character) -> void:
 	for virus_type in character.virus_types:
-		var delay = randf_range(10.0, 30.0) # upload on a random timer mid-session
+		var delay = randf_range(10.0, 30.0)
 		await get_tree().create_timer(delay).timeout
 		if current_character != character:
-			return # character was dismissed before virus fired
+			return
 		var v = Virus.create(virus_type)
 		active_viruses.append(v)
 		virus_uploaded.emit(v)
@@ -373,7 +373,7 @@ func valid_virus(pid: int) -> bool:
 
 func quarantine_virus(pid: int) -> bool:
 	if active_viruses.filter(func(v): return v.quarantined).size() >= quarantine_limit:
-		return false # no slots
+		return false
 	for v in active_viruses:
 		if v.pid == pid:
 			v.quarantined = true
@@ -383,7 +383,6 @@ func quarantine_virus(pid: int) -> bool:
 
 func purge_quarantined() -> void:
 	active_viruses = active_viruses.filter(func(v): return not v.quarantined)
-	# TODO: spike vitals stub here
 
 func has_virus(type: Virus.Type) -> bool:
 	for v in active_viruses:
@@ -429,18 +428,20 @@ func _get_virus_count_for_day() -> int:
 func add_load(amount: float) -> void:
 	if is_dead:
 		return
-	system_load = clamp(system_load + amount, 0.0, 1.0)
+	system_load = clamp(system_load + (amount * get_load_scale()) * 2.0, 0.0, 1.0)
 	vitals_changed.emit(system_load, neural_pressure)
 	if system_load >= 1.0:
 		_kill_character()
+		
+func get_load_scale() -> float:
+	return 1.0 / max(driver_to_install.size(), 1)
 
 func allocate(amount: float) -> void:
-	# allocating too much kills character
 	if amount > neural_pressure + 0.3:
 		_kill_character()
 		return
 	neural_pressure = clamp(neural_pressure - amount, 0.0, 1.0)
-	add_load(amount * 0.6) # allocating costs system load
+	add_load(amount * 0.6)
 
 func reset_vitals() -> void:
 	is_dead = false
@@ -448,18 +449,16 @@ func reset_vitals() -> void:
 	neural_pressure = 0.0
 	pressure_rate = randf_range(0.005, 0.025) * pressure_rate_multiplier # randomize pressure rate per character
 	_schedule_pressure_spike()
-
-	# reset vfib
 	in_vfib = false
 	vfib_mistakes = 0
 	vfib_correct_pid = -1
 	vfib_processes.clear()
 
 func spike_pressure_rate(spiked_rate: float, duration: float) -> void:
-	var og_pressure_rate = pressure_rate # save original pressure rate
+	var og_pressure_rate = pressure_rate
 	pressure_rate = spiked_rate
 	await get_tree().create_timer(duration).timeout
-	pressure_rate = og_pressure_rate # restore base rate
+	pressure_rate = og_pressure_rate
 
 func _schedule_pressure_spike() -> void:
 	await get_tree().create_timer(randf_range(5.0, 20.0)).timeout
@@ -468,11 +467,10 @@ func _schedule_pressure_spike() -> void:
 	spike_pressure_rate(randf_range(0.04, 0.06), randf_range(1.5, 4.0))
 
 func _maybe_trigger_vfib() -> void:
-	# fires randomly mid-session; called only from load_character
 	await get_tree().create_timer(randf_range(45.0, 90.0)).timeout
 	if current_character == null or is_dead:
 		return
-	if randf() < 0.15: # 15% chance after delay - overall rare
+	if randf() < 0.15:
 		_start_vfib()
 
 func _start_vfib() -> void:
@@ -488,12 +486,11 @@ func _start_vfib() -> void:
 	vfib_correct_pid = guilty["pid"]
 
 	vfib_processes.append(guilty)
-	for i in 2: # 2 innocent processes
+	for i in 2:
 		var p = innocents[i].duplicate()
 		p["pid"] = randi_range(1000, 99999)
 		vfib_processes.append(p)
-	vfib_processes.shuffle() # TODO: actually sort by pid in increasing order
-	# TODO: possible for two or more processes (or viruses) to have the same pid - needs fix
+	vfib_processes.shuffle()
 
 	vfib_started.emit()
 
@@ -507,10 +504,11 @@ func vfib_kill(pid: int) -> bool:
 	if vfib_mistakes >= 2:
 		_kill_character()
 	else:
-		vfib_timer = max(vfib_timer - 5.0, 5.0) # lose 5 seconds, min 5 left
+		vfib_timer = max(vfib_timer - 5.0, 5.0)
 	return false
 
 #endregion
+
 
 #region MINIGAMES
 
@@ -528,6 +526,5 @@ func handle_scp(id: String, address: String) -> bool:
 		if n.id == id and n.address == address and n.responsive:
 			return true
 	return false
-	
-	
+
 #endregion

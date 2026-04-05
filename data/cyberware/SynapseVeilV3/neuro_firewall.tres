@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://b5kjwkvhxqfx0"]
 
+[ext_resource type="PackedScene" uid="uid://dpqc31rwrbn8q" path="res://minigames/route_power.tscn" id="1_4hjkc"]
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_dk3qp"]
 
 [resource]
 script = ExtResource("1_dk3qp")
 driver_name = "neuro_firewall.drv"
 display_name = "Neural Firewall"
+minigame_scene = ExtResource("1_4hjkc")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

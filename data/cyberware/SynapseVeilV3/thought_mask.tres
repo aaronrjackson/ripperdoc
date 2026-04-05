@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://c7rlyb8s6vbxr"]
 
+[ext_resource type="PackedScene" uid="uid://dpqc31rwrbn8q" path="res://minigames/route_power.tscn" id="1_3epuv"]
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_m0gsx"]
 
 [resource]
 script = ExtResource("1_m0gsx")
 driver_name = "thought_mask.drv"
 display_name = "Cognitive Masking Layer"
+minigame_scene = ExtResource("1_3epuv")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"
