@@ -53,16 +53,27 @@ func _on_character_died() -> void:
 		minigame_commands.clear()
 		output = saved_output.duplicate()
 
+	var afib = get_tree().root.get_node_or_null("main/Panel/HBoxContainer/VBoxContainer/Vitals/AfibPlayer")
+	if afib:
+		afib.stop()
+
 	output.append(char_name + " has perished...")
+	output.append("")
 	_redraw()
 
 func _on_vfib_started() -> void:
-	output.append("WARNING: cardiac anomaly detected. run 'diagnose cardiac' immediately.")
-	_redraw()
+	var afib = get_tree().root.get_node_or_null("main/Panel/HBoxContainer/VBoxContainer/Vitals/AfibPlayer")
+	if afib:
+		afib.finished.connect(func():
+			if GameManager.in_vfib:
+				afib.play()
+		)
+		afib.play()
 
 func _on_vfib_resolved() -> void:
-	output.append("cardiac rhythm restored.")
-	_redraw()
+	var afib = get_tree().root.get_node_or_null("main/Panel/HBoxContainer/VBoxContainer/Vitals/AfibPlayer")
+	if afib:
+		afib.stop()
 
 func _print_day_header(day: int) -> void:
 	output.append("================================")
@@ -348,6 +359,7 @@ func _handle_command(raw: String) -> void:
 					output.append("otherwise, run with --force to forcibly remove patient (NOT RECOMMENDED)")
 					return
 			output.append("patient successfully discharged.")
+			output.append("")
 			GameManager.dismiss_character()
 			GameManager.next_character()
 
