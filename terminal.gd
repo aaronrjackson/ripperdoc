@@ -30,13 +30,14 @@ func _ready() -> void:
 	output.append("RipperOS v2.77 -- Morro Rock")
 	output.append("(C) 2068 Synthcast Corp. All Rights Reserved.")
 	output.append("")
-	await get_tree().process_frame  # wait for layout to compute sizes
+	await get_tree().process_frame
+	await get_tree().process_frame
 	_redraw()
 
 func _on_character_loaded(character: Character) -> void:
 	print("new character " + character.character_name + " detected!")
 	output.append("")
-	output.append("new patient seated. run 'scan' to assess.")
+	output.append("A new patient has been seated. Run 'scan' to assess.")
 	_redraw()
 
 func _on_character_died():
