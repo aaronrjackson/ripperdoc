@@ -10,10 +10,18 @@ const POINT_COUNT := 500  # more points = smoother curve (ish)
 var time := 0.0
 
 func _ready():
-	GameManager.vfib_started.connect(func(): is_vfib = true; is_flat = false)
-	GameManager.vfib_resolved.connect(func(): is_vfib = false; is_flat = false)
-	GameManager.character_loaded.connect(func(_c): is_vfib = false; is_flat = false)
-	GameManager.character_died.connect(func(): is_vfib = false; is_flat = true)
+	GameManager.vfib_started.connect(func(): 
+		is_vfib = true
+		is_flat = false)
+	GameManager.vfib_resolved.connect(func(): 
+		is_vfib = false
+		is_flat = false)
+	GameManager.character_loaded.connect(func(_c): 
+		is_vfib = false
+		is_flat = false)
+	GameManager.character_died.connect(func(): 
+		is_vfib = false
+		is_flat = true)
 
 func _physics_process(delta):
 	time += delta
