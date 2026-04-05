@@ -285,10 +285,10 @@ func _schedule_pressure_spike() -> void:
 
 func _maybe_trigger_vfib() -> void:
 	# fires randomly mid-session; called only from load_character
-	await get_tree().create_timer(randf_range(30.0, 90.0)).timeout
+	await get_tree().create_timer(randf_range(45.0, 90.0)).timeout
 	if current_character == null or is_dead:
 		return
-	if randf() < 0.2: # 20% chance after delay - overall rare
+	if randf() < 0.15: # 15% chance after delay - overall rare
 		_start_vfib()
 
 func _start_vfib() -> void:

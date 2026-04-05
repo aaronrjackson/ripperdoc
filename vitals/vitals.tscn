@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://80n8bl0ga6cr" path="res://vitals/vitals.gd" id="1_ybwv6"]
 [ext_resource type="Script" uid="uid://b4ihnodwuudo7" path="res://vitals/neural_pressure.gd" id="2_tn2t3"]
 [ext_resource type="Script" uid="uid://b3itl8gua5rge" path="res://vitals/system_load.gd" id="3_tn2t3"]
-[ext_resource type="FontFile" uid="uid://b5yqqge8omiya" path="res://resources/fonts/Play-Regular.ttf" id="4_ifak7"]
+[ext_resource type="FontFile" uid="uid://cdugwjwmwe64t" path="res://resources/fonts/Play-Bold.ttf" id="4_ifak7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ifak7"]
 bg_color = Color(0.10980392, 0.09411765, 0.16078432, 1)
@@ -19,7 +19,7 @@ bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_4tkut"]
 font = ExtResource("4_ifak7")
-font_size = 24
+font_size = 32
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ifak7"]
 
