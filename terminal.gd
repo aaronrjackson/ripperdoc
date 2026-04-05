@@ -283,6 +283,7 @@ func _handle_command(raw: String) -> void:
 			output.append("- allocate [percentage]")
 			output.append("- diagnose [cardiac]")
 			output.append("- kill [pid]")
+			output.append("- exit")
 
 		"echo":
 			output.append(" ".join(args))
@@ -293,7 +294,7 @@ func _handle_command(raw: String) -> void:
 				return
 			output.clear()
 
-		"scan":
+		"scan", "status":
 			if not args.is_empty():
 				output.append("usage: scan")
 				return
@@ -384,7 +385,11 @@ func _handle_command(raw: String) -> void:
 				if GameManager.is_dead:
 					return
 				output.append("WARNING: wrong process. cardiac stability worsening.")
-
+		"exit", "quit":
+			if not args.is_empty():
+				output.append("usage: exit")
+				return
+			get_tree().quit()
 		_:
 			output.append("ripSH: '" + cmd + "' not found")
 			GameManager.add_load(0.03)
