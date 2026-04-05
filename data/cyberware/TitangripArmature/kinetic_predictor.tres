@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://iapuvy575yb8"]
 
+[ext_resource type="PackedScene" uid="uid://dnssnjxk4roxa" path="res://minigames/voltage.tscn" id="1_6ysmk"]
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_obtal"]
 
 [resource]
 script = ExtResource("1_obtal")
 driver_name = "kinetic_predictor.drv"
 display_name = "Kinetic Prediction Engine"
+minigame_scene = ExtResource("1_6ysmk")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

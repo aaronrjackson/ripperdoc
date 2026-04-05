@@ -176,18 +176,13 @@ func handle_command(cmd: String, args: Array) -> String:
 	if cmd != \"volt\":
 		return \"\"
 	if args.is_empty():
-		return \"usage: volt +[num] or volt -[num]\"
-
-	var raw = args[0]
-	if not (raw.begins_with(\"+\") or raw.begins_with(\"-\")):
-		return \"volt: value must start with + or -  (e.g. volt +10)\"
-
-	var amount = raw.to_float()
-	if amount == 0.0 and raw != \"+0\" and raw != \"-0\":
-		return \"volt: invalid value '\" + raw + \"'\"
-
+		return \"usage: volt [num]\"
+	var amount = args[0].to_float()
+	if amount == 0.0 and args[0] != \"0\":
+		return \"volt: invalid value '\" + args[0] + \"'\"
 	current_voltage = clamp(current_voltage + amount, VOLTAGE_MIN, VOLTAGE_MAX)
 	_update_display()
+	return \"voltage adjusted to %.1f\" % current_voltage
 	return \"voltage adjusted to %.1f\" % current_voltage
 
 func _update_display() -> void:
