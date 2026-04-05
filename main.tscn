@@ -6,8 +6,19 @@
 [ext_resource type="PackedScene" uid="uid://cv0a34so8ikvi" path="res://terminal.tscn" id="3_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ddf5csa45vp5l" path="res://vitals/vitals.tscn" id="4_272bh"]
 [ext_resource type="AudioStream" uid="uid://dj818km5mhv3n" path="res://resources/audio/ambience.wav" id="6_7mycd"]
-[ext_resource type="PackedScene" uid="uid://rau5grp6n4ed" path="res://game_over_screen.tscn" id="7_kek77"]
-[ext_resource type="PackedScene" uid="uid://y0h3fnecye60" path="res://pause_menu.tscn" id="8_4c57u"]
+[ext_resource type="Shader" uid="uid://depowwq0h55g5" path="res://minigames/crt.gdshader" id="7_272bh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5vw27"]
+shader = ExtResource("7_272bh")
+shader_parameter/scanline_intensity = 0.10000000475
+shader_parameter/scanline_count = 120.000005225
+shader_parameter/vignette_intensity = 0.12400000589
+shader_parameter/flicker_intensity = 0.018000000855
+shader_parameter/noise_intensity = 0.0750000035625
+shader_parameter/bar_intensity = 0.0530000025175
+shader_parameter/bar_speed = 0.1590000075525
+shader_parameter/bar_thickness = 0.1310000062225
+shader_parameter/fisheye_strength = 0.3150000149625
 
 [node name="main" type="Control" unique_id=1977246374]
 layout_mode = 3
@@ -56,10 +67,18 @@ size_flags_stretch_ratio = 1.5
 stream = ExtResource("6_7mycd")
 volume_db = -24.0
 
-[node name="GameOverScreen" parent="." unique_id=1151024541 instance=ExtResource("7_kek77")]
-process_mode = 3
+[node name="CRTOverlay" type="ColorRect" parent="." unique_id=444738159]
+material = SubResource("ShaderMaterial_5vw27")
 layout_mode = 1
-
-[node name="PauseMenu" parent="." unique_id=531931981 instance=ExtResource("8_4c57u")]
-process_mode = 3
-layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -201.0
+offset_top = -114.0
+offset_right = -201.0
+offset_bottom = -114.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.2, 1.2)
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
