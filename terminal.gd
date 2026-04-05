@@ -1,6 +1,7 @@
 extends Control
 
 @onready var output_box = $MarginContainer/TextBox
+@onready var virus_player = $VirusPlayer
 @onready var patient = get_tree().root.get_node("main/Panel/HBoxContainer/Patient/Layers") # spaghetti
 @onready var patient_node = get_tree().root.get_node("main/Panel/HBoxContainer/Patient")
 
@@ -30,6 +31,7 @@ func _ready() -> void:
 	GameManager.day_advanced.connect(_on_day_advanced)
 	GameManager.game_over.connect(_on_game_over)
 	GameManager.next_patient_incoming.connect(_on_next_patient_incoming)
+	GameManager.virus_uploaded.connect(_on_virus_uploaded)
 
 	_print_boot()
 	await get_tree().process_frame
@@ -110,6 +112,16 @@ func _on_game_over() -> void:
 
 func _on_next_patient_incoming() -> void:
 	output.append("Next patient incoming...")
+	_redraw()
+
+func _on_virus_uploaded(virus: Virus) -> void:
+	var sounds = [
+		preload("res://resources/audio/glitch1.wav"),
+		preload("res://resources/audio/glitch2.wav"),
+		preload("res://resources/audio/glitch3.wav"),
+	]
+	virus_player.stream = sounds.pick_random()
+	virus_player.play()
 	_redraw()
 
 
@@ -332,7 +344,7 @@ func _handle_command(raw: String) -> void:
 			output.append("- allocate [percentage]")
 			output.append("- diagnose [cardiac]")
 			output.append("- kill [pid]")
-			output.append("- shop [item_id]")
+			output.append("- shop buy [item_id]")
 			output.append("- clockin")
 			output.append("- exit")
 
