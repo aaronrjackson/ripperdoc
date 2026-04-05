@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://bhyds6s6mfkn"]
 
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_8kn4b"]
+[ext_resource type="PackedScene" uid="uid://dnssnjxk4roxa" path="res://minigames/voltage.tscn" id="1_io4lh"]
 
 [resource]
 script = ExtResource("1_8kn4b")
 driver_name = "thermo_regulator.drv"
 display_name = "Thermal Regulation Core"
+minigame_scene = ExtResource("1_io4lh")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

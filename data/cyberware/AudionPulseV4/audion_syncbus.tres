@@ -8,5 +8,4 @@ script = ExtResource("1_e6or4")
 driver_name = "audion_syncbus.drv"
 display_name = "Audio Synchronization Bus"
 minigame_scene = ExtResource("1_ljjtg")
-minigame_commands = Array[String]([""])
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

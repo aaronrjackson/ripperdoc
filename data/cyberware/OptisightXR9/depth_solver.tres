@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://cplu2bswiitnw"]
 
+[ext_resource type="PackedScene" uid="uid://d0w7bpua87f3j" path="res://minigames/route_power.tscn" id="1_aj7y1"]
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_i4s1x"]
 
 [resource]
 script = ExtResource("1_i4s1x")
 driver_name = "depth_solver.drv"
 display_name = "Depth Resolution Solver"
+minigame_scene = ExtResource("1_aj7y1")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

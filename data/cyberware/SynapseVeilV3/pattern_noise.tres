@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://bqak8elrtiq0l"]
 
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_1vpnl"]
-[ext_resource type="PackedScene" uid="uid://dpqc31rwrbn8q" path="res://minigames/route_power.tscn" id="1_ff5d2"]
+[ext_resource type="PackedScene" uid="uid://d0w7bpua87f3j" path="res://minigames/route_power.tscn" id="1_ff5d2"]
 
 [resource]
 script = ExtResource("1_1vpnl")

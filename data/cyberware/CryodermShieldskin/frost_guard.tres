@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Driver" format=3 uid="uid://wc8623c3y8cg"]
 
 [ext_resource type="Script" uid="uid://bog7qr32gi2mf" path="res://data/driver.gd" id="1_36c4r"]
+[ext_resource type="PackedScene" uid="uid://61mqyi4tr7n6" path="res://minigames/brainwaves.tscn" id="1_uex0w"]
 
 [resource]
 script = ExtResource("1_36c4r")
 driver_name = "frost_guard.drv"
 display_name = "Frost Guard Protocol"
+minigame_scene = ExtResource("1_uex0w")
 metadata/_custom_type_script = "uid://bog7qr32gi2mf"

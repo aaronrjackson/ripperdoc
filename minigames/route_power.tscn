@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://dpqc31rwrbn8q"]
+[gd_scene format=3 uid="uid://d0w7bpua87f3j"]
 
-[ext_resource type="Script" uid="uid://dvul8pjhw5sol" path="res://minigames/route_power.gd" id="1_h3t5j"]
-[ext_resource type="Script" uid="uid://vkkr7sdc5iv7" path="res://minigames/draw_layer.gd" id="2_e6tow"]
+[ext_resource type="Script" path="res://minigames/route_power.gd" id="1_h3t5j"]
+[ext_resource type="Script" path="res://minigames/draw_layer.gd" id="2_e6tow"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fcnvx"]
 bg_color = Color(0.07058824, 0.0627451, 0.08627451, 1)

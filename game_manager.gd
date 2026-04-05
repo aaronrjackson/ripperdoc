@@ -427,6 +427,10 @@ func _get_virus_count_for_day() -> int:
 func add_load(amount: float) -> void:
 	if is_dead:
 		return
+	if is_between_days:
+		return
+	if current_character == null:
+		return
 	system_load = clamp(system_load + (amount * get_load_scale()) * 2.0, 0.0, 1.0)
 	vitals_changed.emit(system_load, neural_pressure)
 	if system_load >= 1.0:
