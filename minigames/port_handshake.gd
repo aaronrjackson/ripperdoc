@@ -52,16 +52,29 @@ func _generate_nodes() -> Array:
 		var unix = Time.get_unix_time_from_system() - (days_ago * 86400)
 		var date = Time.get_date_dict_from_unix_time(unix)
 		var date_str = "%02d/%02d/%04d" % [date.month, date.day, date.year]
-		var response_chance = lerp(0.9, 0.05, days_ago / 365.0)
-		var responsive = randf() < response_chance
 
 		result.append({
 			"id": id,
 			"address": address,
 			"last_accessed": date_str,
 			"days_ago": days_ago,
-			"responsive": responsive
+			"responsive": false  # all false for now, one gets picked below
 		})
+
+	# pick one to be the guaranteed responsive node
+	# weight toward more recent nodes (lower days_ago)
+	var weights: Array = []
+	for n in result:
+		weights.append(1.0 / (n.days_ago + 1.0))  # +1 to avoid divide by zero
+
+	var total = weights.reduce(func(a, b): return a + b)
+	var roll = randf() * total
+	var cumulative = 0.0
+	for i in result.size():
+		cumulative += weights[i]
+		if roll <= cumulative:
+			result[i].responsive = true
+			break
 
 	return result
 

@@ -4,6 +4,8 @@ extends Panel
 @export var fill := 0.3 # 0.0 - 1.0
 @export var epsilon = 0.05 # overlap to close gap
 
+var capacity = 100 * GameManager.driver_to_install.size()
+
 var time: float
 
 func _process(delta: float) -> void:
