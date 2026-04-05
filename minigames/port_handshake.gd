@@ -29,9 +29,9 @@ func _ready():
 
 func get_tutorial() -> Array[String]:
 	return [
-		"establish a secure connection to retrieve the driver package.",
+		"Establish a secure connection to retrieve the driver package.",
 		"ping [address]  --  check if a node is live",
-		"scp [id]@[address]  --  pull driver from a live node",
+		"scp [id]@[address] [driver]  --  pull driver from a live node",
 	]
 
 func handle_command(cmd: String, args: Array) -> String:

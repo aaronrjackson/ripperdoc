@@ -280,6 +280,9 @@ func _handle_command(raw: String) -> void:
 			output.append("- install [driver]")
 			output.append("- dismiss [--force]")
 			output.append("- virus [scan | quarantine | purge]")
+			output.append("- allocate [percentage]")
+			output.append("- diagnose [cardiac]")
+			output.append("- kill [pid]")
 
 		"echo":
 			output.append(" ".join(args))
@@ -424,11 +427,15 @@ func _cmd_install(target: String) -> void:
 
 			saved_output = output.duplicate()
 			output.clear()
-			output.append("--- " + target + " ---")
+			var header = "############ " + driver.display_name.to_upper() + " INSTALLATION WIZARD ############"
+			output.append(header)
+			output.append("")
 			if minigame.has_method("get_tutorial"):
 				for line in minigame.get_tutorial():
 					output.append(line)
-			output.append("ctrl+c to abort.")
+			output.append("CTRL+C to abort.")
+			output.append("")
+			output.append("#".repeat(header.length()))
 			output.append("")
 			minigame_commands = minigame.commands.duplicate()
 			current_minigame_driver = target
