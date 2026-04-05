@@ -539,6 +539,8 @@ func _cmd_install(target: String) -> void:
 			var header = "############ " + driver.display_name.to_upper() + " INSTALLATION WIZARD ############"
 			output.append(header)
 			output.append("")
+			output.append(driver.driver_name + " installation")
+			output.append("")
 			if minigame.has_method("get_tutorial"):
 				for line in minigame.get_tutorial():
 					output.append(line)

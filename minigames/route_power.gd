@@ -201,19 +201,18 @@ func handle_command(cmd: String, args: Array) -> String:
 
 func _handle_route(args: Array) -> String:
 	if args.is_empty():
-		return "usage: route <col>x<row> | route clear"
+		return "usage: route <col> <row> | route clear"
 
 	if args[0] == "clear":
 		current_path.clear()
 		draw_layer.queue_redraw()
 		return "route cleared."
 
-	var parts = args[0].split("x", false)
-	if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
-		return "route: invalid coordinate. use format <col>x<row> e.g. 3x4"
+	if args.size() < 2 or not args[0].is_valid_int() or not args[1].is_valid_int():
+		return "route: invalid coordinate. use format <col> <row> e.g. route 3 4"
 
-	var col = parts[0].to_int()
-	var row = parts[1].to_int()
+	var col = args[0].to_int()
+	var row = args[1].to_int()
 
 	if col < 1 or col > POINT_COLS or row < 1 or row > POINT_ROWS:
 		return "route: coordinate out of bounds. grid is %dx%d" % [POINT_COLS, POINT_ROWS]
@@ -221,7 +220,7 @@ func _handle_route(args: Array) -> String:
 	var target = Vector2i(col, row)
 
 	if _is_wall_node(target):
-		return "route: node %dx%d is blocked by walls." % [col, row]
+		return "route: node %d %d is blocked by walls." % [col, row]
 
 	if current_path.is_empty():
 		current_path.append(start_node)
@@ -254,7 +253,7 @@ func _handle_route(args: Array) -> String:
 			var msg = _start_round()
 			return "connection established. " + msg
 
-	return "waypoint set at %dx%d" % [col, row]
+	return "waypoint set at %d %d" % [col, row]
 
 func _check_walls(from: Vector2i, to: Vector2i) -> String:
 	var steps = _get_segment_steps(from, to)
@@ -281,7 +280,7 @@ func get_tutorial() -> Array[String]:
 	return [
 		"power routing minigame.",
 		"connect the start node to the end node.",
-		"type 'route <col>x<row>' to set waypoints.",
+		"type 'route [col] [row]' to set waypoints.",
 		"type 'route clear' to reset your path.",
 		"complete 3 connections to finish.",
 		"start: %dx%d  end: %dx%d" % [start_node.x, start_node.y, end_node.x, end_node.y],

@@ -20,7 +20,10 @@ shader_parameter/scanline_count = 10.0
 shader_parameter/vignette_intensity = 0.246000011685
 shader_parameter/flicker_intensity = 0.018
 shader_parameter/noise_intensity = 0.190000009025
-shader_parameter/glow_intensity = 0.2000000095
+shader_parameter/bar_intensity = 0.25
+shader_parameter/bar_speed = 0.18
+shader_parameter/bar_thickness = 0.08
+shader_parameter/fisheye_strength = 0.12
 
 [node name="Terminal" type="Control" unique_id=270556858]
 custom_minimum_size = Vector2(100, 100)
